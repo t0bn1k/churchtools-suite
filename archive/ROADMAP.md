@@ -114,7 +114,7 @@
 
 **Dateien:**
 - `admin/views/tab-events.php`
-- `admin/css/churchtools-suite-admin.css`
+ - `assets/css/churchtools-suite-admin.css`
 
 ---
 
@@ -216,7 +216,7 @@
   - Custom Block Category "ChurchTools Suite"
   - Block Registration mit `register_block_type()`
 - ✅ Block Editor JavaScript
-  - admin/js/churchtools-suite-blocks.js
+  - assets/js/churchtools-suite-blocks.js
   - InspectorControls für Einstellungen
   - Preview im Editor
   - View-Selektor, Calendar IDs, Limit/Columns

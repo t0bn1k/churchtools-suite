@@ -87,8 +87,8 @@ Key API endpoints:
 
 ### Admin UI structure:
 - [admin/views/admin-page.php](../admin/views/admin-page.php) - Tab navigation
-- [admin/css/churchtools-suite-admin.css](../admin/css/churchtools-suite-admin.css) - UI styling
-- [admin/js/churchtools-suite-admin.js](../admin/js/churchtools-suite-admin.js) - AJAX interactions
+- [assets/css/churchtools-suite-admin.css](../assets/css/churchtools-suite-admin.css) - UI styling
+- [assets/js/churchtools-suite-admin.js](../assets/js/churchtools-suite-admin.js) - AJAX interactions
 
 ## Build & Deploy
 

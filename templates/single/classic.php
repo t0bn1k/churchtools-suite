@@ -129,7 +129,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	
 	<!-- Actions -->
 	<div class="cts-single-actions">
-		<button class="cts-single-action-btn cts-btn-back" onclick="window.history.back();">
+		<button class="cts-single-action-btn cts-btn-back cts-back-button">
 			<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 				<line x1="19" y1="12" x2="5" y2="12"/>
 				<polyline points="12 19 5 12 12 5"/>

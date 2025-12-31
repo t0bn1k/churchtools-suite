@@ -63,25 +63,41 @@ class ChurchTools_Suite_Service_Sync_Service {
 		}
 		
 		// DEBUG: Log sync start
-		error_log( 'ChurchTools Service Groups Sync: Starting...' );
+		if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+			ChurchTools_Suite_Logger::info( 'service_sync', 'Service Groups Sync: Starting' );
+		} else {
+			error_log( 'ChurchTools Service Groups Sync: Starting...' );
+		}
 		
 		// Fetch service groups from ChurchTools
 		$response = $this->ct_client->api_request( 'servicegroups', 'GET' );
 		
 		if ( is_wp_error( $response ) ) {
-			error_log( 'ChurchTools Service Groups Sync: API Error - ' . $response->get_error_message() );
+			if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+				ChurchTools_Suite_Logger::error( 'service_sync', 'Service Groups Sync: API Error', [ 'error' => $response->get_error_message() ] );
+			} else {
+				error_log( 'ChurchTools Service Groups Sync: API Error - ' . $response->get_error_message() );
+			}
 			return $response;
 		}
 		
 		if ( ! isset( $response['data'] ) || ! is_array( $response['data'] ) ) {
-			error_log( 'ChurchTools Service Groups Sync: Invalid response structure - ' . wp_json_encode( $response ) );
+			if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+				ChurchTools_Suite_Logger::error( 'service_sync', 'Service Groups Sync: Invalid response structure', [ 'response' => $response ] );
+			} else {
+				error_log( 'ChurchTools Service Groups Sync: Invalid response structure - ' . wp_json_encode( $response ) );
+			}
 			return new WP_Error( 'invalid_response', __( 'Ungültige API-Antwort für Service Groups', 'churchtools-suite' ) );
 		}
 		
 		$groups = $response['data'];
 		
 		// DEBUG: Log groups found
-		error_log( sprintf( 'ChurchTools Service Groups Sync: Found %d groups', count( $groups ) ) );
+		if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+			ChurchTools_Suite_Logger::debug( 'service_sync', sprintf( 'Service Groups Sync: Found %d groups', count( $groups ) ), [ 'count' => count( $groups ) ] );
+		} else {
+			error_log( sprintf( 'ChurchTools Service Groups Sync: Found %d groups', count( $groups ) ) );
+		}
 		
 		$stats = [
 			'groups_found' => count( $groups ),
@@ -110,13 +126,17 @@ class ChurchTools_Suite_Service_Sync_Service {
 		update_option( 'churchtools_suite_service_groups_last_sync', current_time( 'mysql' ), false );
 		
 		// DEBUG: Log sync complete
-		error_log( sprintf(
-			'ChurchTools Service Groups Sync: Complete - %d found, %d inserted, %d updated, %d skipped',
-			$stats['groups_found'],
-			$stats['groups_inserted'],
-			$stats['groups_updated'],
-			$stats['groups_skipped']
-		) );
+		if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+			ChurchTools_Suite_Logger::info( 'service_sync', 'Service Groups Sync Complete', $stats );
+		} else {
+			error_log( sprintf(
+				'ChurchTools Service Groups Sync: Complete - %d found, %d inserted, %d updated, %d skipped',
+				$stats['groups_found'],
+				$stats['groups_inserted'],
+				$stats['groups_updated'],
+				$stats['groups_skipped']
+			) );
+		}
 		
 		return $stats;
 	}
@@ -138,16 +158,24 @@ class ChurchTools_Suite_Service_Sync_Service {
 		}
 		
 		// DEBUG: Log sync start
-		error_log( sprintf(
-			'ChurchTools Services Sync: Starting... (filtering by %d selected groups)',
-			count( $selected_group_ids )
-		) );
+		if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+			ChurchTools_Suite_Logger::info( 'service_sync', 'Services Sync: Starting', [ 'selected_group_count' => count( $selected_group_ids ) ] );
+		} else {
+			error_log( sprintf(
+				'ChurchTools Services Sync: Starting... (filtering by %d selected groups)',
+				count( $selected_group_ids )
+			) );
+		}
 		
 		// Fetch services from ChurchTools
 		$response = $this->ct_client->api_request( 'services', 'GET' );
 		
 		if ( is_wp_error( $response ) ) {
-			error_log( 'ChurchTools Services Sync: API Error - ' . $response->get_error_message() );
+			if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+				ChurchTools_Suite_Logger::error( 'service_sync', 'Services Sync: API Error', [ 'error' => $response->get_error_message() ] );
+			} else {
+				error_log( 'ChurchTools Services Sync: API Error - ' . $response->get_error_message() );
+			}
 			return $response;
 		}
 		

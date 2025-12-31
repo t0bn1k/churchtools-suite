@@ -49,13 +49,13 @@ $auto_sync_enabled = get_option('churchtools_suite_auto_sync_enabled', 0);
 					<?php esc_html_e('Kalender jetzt synchronisieren', 'churchtools-suite'); ?>
 				</button>
 			</div>
-			
-			<div id="cts-sync-calendars-result" style="margin-top: 15px;"></div>
+            
+			<div id="cts-sync-calendars-result" class="cts-mt-20"></div>
 		</div>
 	</div>
 	
 	<!-- Sync Events Card -->
-	<div class="cts-card" style="margin-top: 20px;">
+	<div class="cts-card cts-mt-20">
 		<div class="cts-card-header">
 			<h2>📅 <?php esc_html_e('Termine synchronisieren', 'churchtools-suite'); ?></h2>
 		</div>
@@ -102,7 +102,7 @@ $auto_sync_enabled = get_option('churchtools_suite_auto_sync_enabled', 0);
 						<span class="dashicons dashicons-calendar"></span>
 						<?php esc_html_e('Termine jetzt synchronisieren', 'churchtools-suite'); ?>
 					</button>
-					<button type="button" id="cts-force-full-sync-btn" class="button button-secondary" disabled title="<?php esc_attr_e('Automatischer Sync ist aktiviert', 'churchtools-suite'); ?>" style="margin-left: 10px;">
+					<button type="button" id="cts-force-full-sync-btn" class="button button-secondary cts-ml-8" disabled title="<?php esc_attr_e('Automatischer Sync ist aktiviert', 'churchtools-suite'); ?>">
 						<span class="dashicons dashicons-backup"></span>
 						<?php esc_html_e('Vollständigen Sync erzwingen', 'churchtools-suite'); ?>
 					</button>
@@ -113,24 +113,24 @@ $auto_sync_enabled = get_option('churchtools_suite_auto_sync_enabled', 0);
 						<span class="dashicons dashicons-calendar"></span>
 						<?php esc_html_e('Termine jetzt synchronisieren', 'churchtools-suite'); ?>
 					</button>
-					<button type="button" id="cts-force-full-sync-btn" class="button button-secondary" style="margin-left: 10px;">
+					<button type="button" id="cts-force-full-sync-btn" class="button button-secondary cts-ml-8">
 						<span class="dashicons dashicons-backup"></span>
 						<?php esc_html_e('Vollständigen Sync erzwingen', 'churchtools-suite'); ?>
 					</button>
 				</div>
 			<?php endif; ?>
 			
-			<div id="cts-sync-events-result" style="margin-top: 15px;"></div>
+			<div id="cts-sync-events-result" class="cts-mt-20"></div>
 		</div>
 	</div>
 	
 	<!-- Sync Info -->
-	<div class="cts-card" style="margin-top: 20px;">
+	<div class="cts-card cts-mt-20">
 		<div class="cts-card-header">
 			<h2>ℹ️ <?php esc_html_e('Hinweise zur Synchronisation', 'churchtools-suite'); ?></h2>
 		</div>
 		<div class="cts-card-body">
-			<ul style="margin-left: 20px;">
+			<ul class="cts-ml-20">
 				<li><?php esc_html_e('Die Kalender-Synchronisation lädt die verfügbaren Kalender aus ChurchTools.', 'churchtools-suite'); ?></li>
 				<li><?php esc_html_e('Nach der Kalender-Synchronisation können Sie im Kalender-Tab auswählen, welche Kalender synchronisiert werden sollen.', 'churchtools-suite'); ?></li>
 				<li><?php esc_html_e('Die Termin-Synchronisation lädt nur Termine aus den im Kalender-Tab ausgewählten Kalendern.', 'churchtools-suite'); ?></li>

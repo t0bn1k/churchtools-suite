@@ -80,7 +80,9 @@
 			const direction = $(this).data('direction');
 			// AJAX call to load different month
 			// TODO: Implement AJAX calendar navigation
-			console.log('Navigate calendar:', direction);
+			if ( typeof window.churchtoolsSuite !== 'undefined' && window.churchtoolsSuite.debug ) {
+				console.log('Navigate calendar:', direction);
+			}
 		});
 	}
 
@@ -123,6 +125,16 @@
 			}
 		});
 	}
+
+	/**
+	 * Back button handler (delegated)
+	 */
+	$(document).on('click', '.cts-back-button', function(e) {
+		e.preventDefault();
+		if (typeof window !== 'undefined' && window.history && window.history.back) {
+			window.history.back();
+		}
+	});
 
 	/**
 	 * Show event detail modal

@@ -34,30 +34,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<span>🗑️</span> Log löschen
 			</button>
 		</div>
+
 	</div>
-</div>
-<!-- <script>
-jQuery(function($){
-	$('#cts_clear_logs_btn').on('click', function(e){
-		e.preventDefault();
-		if (!confirm('<?php esc_html_e( 'Alle Plugin-Logs unwiderruflich löschen?', 'churchtools-suite' ); ?>')) return;
-		var $btn = $(this);
-		$btn.prop('disabled', true).text('⏳ <?php esc_html_e( 'Lösche...', 'churchtools-suite' ); ?>');
-		$.post(ajaxurl, {
-			action: 'cts_clear_logs',
-			nonce: '<?php echo wp_create_nonce('churchtools_suite_admin'); ?>'
-		}).done(function(resp){
-			if (resp.success) {
-				alert('<?php esc_html_e( 'Logs wurden gelöscht.', 'churchtools-suite' ); ?>');
-				location.reload();
-			} else {
-				alert((resp.data && resp.data.message) ? resp.data.message : 'Fehler beim Löschen der Logs.');
-			}
-		}).fail(function(){
-			alert('Netzwerkfehler beim Löschen der Logs.');
-		}).always(function(){
-			$btn.prop('disabled', false).text('🗑️ <?php esc_html_e( 'Log löschen', 'churchtools-suite' ); ?>');
-		});
-	});
-});
-</script> -->
+	</div>

@@ -69,7 +69,7 @@ $auto_update_level = get_option( 'churchtools_suite_auto_update_level', 'none' )
 
 			<tr>
 				<td colspan="2">
-					<div class="cts-info" style="margin-top:12px; background:#f1f7ff; border-left:4px solid #2d7bf6; padding:12px;">
+					<div class="cts-info cts-info-box">
 						<strong><?php esc_html_e( 'Update‑Kategorien (Beispiele)', 'churchtools-suite' ); ?></strong>
 						<ul style="margin:8px 0 0 18px; padding:0; color:#333;">
 							<li><strong><?php esc_html_e( 'Nur Major', 'churchtools-suite' ); ?>:</strong> <?php esc_html_e( 'Nur wenn sich die Major‑Version erhöht (z.B. 1.2.3 → 2.0.0).', 'churchtools-suite' ); ?></li>
@@ -132,7 +132,7 @@ $auto_update_level = get_option( 'churchtools_suite_auto_update_level', 'none' )
 		</table>
 		
 		<?php if ( $advanced_mode ) : ?>
-		<div class="cts-info" style="margin-top: 15px; padding: 12px; background: #fff3cd; border-left: 4px solid #ffc107;">
+		<div class="cts-info cts-warning-box">
 			<p style="margin: 0;">
 				<strong>🔧 Erweiterter Modus aktiv:</strong> 
 				<?php esc_html_e( 'Sie sehen jetzt zusätzliche Tabs und Optionen in der Administration.', 'churchtools-suite' ); ?>
@@ -152,7 +152,7 @@ $auto_update_level = get_option( 'churchtools_suite_auto_update_level', 'none' )
 </form>
 
 <!-- Update Modal -->
-<div id="cts_update_modal" style="display:none;">
+<div id="cts_update_modal" class="cts-hidden">
 	<div class="cts-modal-overlay"></div>
 	<div class="cts-modal">
 		<h3 id="cts_update_title"><?php esc_html_e( 'Update Verfügbar', 'churchtools-suite' ); ?></h3>
@@ -161,15 +161,11 @@ $auto_update_level = get_option( 'churchtools_suite_auto_update_level', 'none' )
 		</div>
 		<p style="margin-top:12px;">
 			<button type="button" id="cts_start_update_btn" class="cts-button cts-button-danger"><?php esc_html_e( 'Update installieren', 'churchtools-suite' ); ?></button>
-			<button type="button" id="cts_close_update_btn" class="cts-button" style="margin-left:8px;"><?php esc_html_e( 'Abbrechen', 'churchtools-suite' ); ?></button>
+			<button type="button" id="cts_close_update_btn" class="cts-button cts-ml-8"><?php esc_html_e( 'Abbrechen', 'churchtools-suite' ); ?></button>
 		</p>
 	</div>
 </div>
 
-<style>
-.cts-modal-overlay{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.5);}
-.cts-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;padding:20px;border-radius:6px;max-width:640px;width:90%;box-shadow:0 8px 24px rgba(0,0,0,0.2);}
-</style>
 
 <script type="text/javascript">
 /* <![CDATA[ */

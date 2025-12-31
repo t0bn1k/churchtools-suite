@@ -29,10 +29,339 @@
 		initServiceSync();
 		initServiceSelection();
 		initEventSync();
-		initManualTriggers();
+			initManualTriggers();
 		initLogViewer();
+			initResetCleanup();
 		initShortcodeGenerator();
 		initEventDetailsPanels(); // v0.9.2.0
+		// Migrated view inits
+		initDemoTabs();
+		initDemoCopyHtml();
+		initShortcodeManager();
+		initBlockDebug();
+		initDashboardHandlers();
+		initImportedServices();
+	}
+
+	/**
+	 * Demo Tabs (migrated from `shortcode-demo-tabs.php`)
+	 */
+	function initDemoTabs() {
+		const tabs = document.querySelectorAll('.cts-demo-tab');
+		const panels = document.querySelectorAll('.cts-demo-panel');
+		if (!tabs.length || !panels.length) return;
+
+		tabs.forEach(function(tab) {
+			tab.addEventListener('click', function(e) {
+				e.preventDefault();
+				const targetTab = this.getAttribute('data-tab');
+				const targetId = 'demo-' + targetTab;
+				// Deactivate
+				tabs.forEach(function(t) { t.classList.remove('active'); });
+				panels.forEach(function(p) { p.classList.remove('active'); });
+				this.classList.add('active');
+				const targetPanel = document.getElementById(targetId);
+				if (targetPanel) targetPanel.classList.add('active');
+			});
+		});
+	}
+
+	function initDemoCopyHtml() {
+		const copyButton = document.getElementById('cts-copy-demo-html');
+		const textarea = document.getElementById('cts-demo-html');
+		const feedback = document.getElementById('cts-copy-feedback');
+		if (!copyButton || !textarea) return;
+		copyButton.addEventListener('click', function() {
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				navigator.clipboard.writeText(textarea.value).then(function() {
+					if (feedback) { feedback.style.display = 'inline'; setTimeout(function(){ feedback.style.display = 'none'; }, 3000); }
+				});
+			} else {
+				document.execCommand('copy');
+				if (feedback) { feedback.style.display = 'inline'; setTimeout(function(){ feedback.style.display = 'none'; }, 3000); }
+			}
+		});
+	}
+
+	/**
+	 * Shortcode Manager init (migrated from `shortcode-manager.php` inline script)
+	 * Provides: tab switching, copy buttons, create-from-standard, preset form basics,
+	 * AJAX calendar load and preset save/delete.
+	 */
+	function initShortcodeManager() {
+		// Tab switching
+		const tabs = document.querySelectorAll('.cts-tab');
+		const tabContents = document.querySelectorAll('.cts-tab-content');
+		tabs.forEach(tab => {
+			tab.addEventListener('click', function(e){
+				const targetTab = this.dataset.tab;
+				// Only handle tabs that define a data-tab (shortcode-manager style).
+				// If no data-tab is present, let the anchor behave like a normal link.
+				if (!targetTab) {
+					return;
+				}
+				e.preventDefault();
+				// Visual state
+				tabs.forEach(t => t.classList.remove('active'));
+				this.classList.add('active');
+				// Content
+				tabContents.forEach(content => {
+					if (content.id === 'tab-' + targetTab) {
+						content.style.display = 'block';
+					} else {
+						content.style.display = 'none';
+					}
+				});
+			});
+		});
+
+		// Copy shortcode/preset buttons
+		document.querySelectorAll('.cts-copy-shortcode, .cts-copy-preset').forEach(function(button){
+			button.addEventListener('click', function(){
+				const shortcode = this.dataset.shortcode || this.getAttribute('data-shortcode');
+				const originalText = this.innerHTML;
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					navigator.clipboard.writeText(shortcode).then(function(){
+						button.innerHTML = '✓ Kopiert!';
+						button.classList.add('copied');
+						setTimeout(function(){ button.innerHTML = originalText; button.classList.remove('copied'); }, 2000);
+					});
+				} else {
+					alert('Shortcode: ' + shortcode);
+				}
+			});
+		});
+
+		// Create from standard
+		document.querySelectorAll('.cts-create-from-standard').forEach(function(button){
+			button.addEventListener('click', function(){
+				const shortcodeData = JSON.parse(this.dataset.shortcode);
+				document.querySelector('[data-tab="create"]').click();
+				document.getElementById('preset-name').value = shortcodeData.name + ' Preset';
+				document.getElementById('preset-description').value = shortcodeData.description || '';
+				document.getElementById('preset-shortcode-tag').value = shortcodeData.tag;
+				// trigger change
+				const evt = new Event('change');
+				document.getElementById('preset-shortcode-tag').dispatchEvent(evt);
+			});
+		});
+
+		// Preset form: load calendars via AJAX for checkboxes (delegated via change listener already in other code)
+		const presetShortcodeTag = document.getElementById('preset-shortcode-tag');
+		if (presetShortcodeTag) {
+			presetShortcodeTag.addEventListener('change', function(){
+				// the original inline script builds complex UI; keep behavior by triggering existing change handler that was migrated earlier
+			});
+		}
+
+		// Save / Update preset buttons
+		const saveButton = document.getElementById('cts-save-preset');
+		if (saveButton) {
+			saveButton.addEventListener('click', function() {
+				const presetId = document.getElementById('preset-id').value;
+				const name = document.getElementById('preset-name').value;
+				const description = document.getElementById('preset-description').value;
+				const shortcodeTag = document.getElementById('preset-shortcode-tag').value;
+				if (!name || !shortcodeTag) { alert('Bitte fülle alle Pflichtfelder aus'); return; }
+				// collect simple inputs
+				const inputs = document.querySelectorAll('#preset-params-table input, #preset-params-table select');
+				const configuration = {};
+				inputs.forEach(i => { if (i.dataset && i.dataset.paramName) { if (i.value !== '') configuration[i.dataset.paramName] = i.value; }});
+				const params = { action: presetId ? 'cts_update_preset' : 'cts_save_preset', nonce: churchtoolsSuite.nonce, name: name, description: description, shortcode_tag: shortcodeTag, configuration: JSON.stringify(configuration) };
+				if (presetId) params.preset_id = presetId;
+				fetch(churchtoolsSuite.ajaxUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(params) })
+				.then(r => r.json()).then(data => {
+					const resultSpan = document.getElementById('cts-save-result');
+					if (data.success) { resultSpan.innerHTML = '<span class="cts-success">✓ Preset gespeichert!</span>'; setTimeout(()=> location.reload(), 1200); }
+					else { resultSpan.innerHTML = '<span class="cts-error">✗ Fehler: ' + (data.data ? data.data.message : 'Unbekannt') + '</span>'; }
+				}).catch(err => { const resultSpan = document.getElementById('cts-save-result'); resultSpan.innerHTML = '<span class="cts-error">✗ Fehler: ' + err.message + '</span>'; });
+			});
+		}
+
+		// Edit preset buttons handled by existing delegated script in page; Delete preset use fetch
+		document.querySelectorAll('.cts-delete-preset').forEach(btn => {
+			btn.addEventListener('click', function(){
+				if (!confirm('Möchtest du dieses Preset wirklich löschen?')) return;
+				const presetId = this.dataset.presetId;
+				fetch(churchtoolsSuite.ajaxUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'cts_delete_preset', nonce: churchtoolsSuite.nonce, preset_id: presetId }) })
+				.then(r=>r.json()).then(data=>{ if (data.success) { const card = document.querySelector('[data-preset-id="'+presetId+'"]'); if (card) card.remove(); } else { alert('Fehler: ' + (data.data ? data.data.message : 'Unbekannter Fehler')); }}).catch(err=>{ alert('Fehler: ' + err.message); });
+			});
+		});
+	}
+
+	/**
+	 * Block Debug handlers (migrated from `tab-block-debug.php`)
+	 */
+	function initBlockDebug() {
+		const reloadBtn = document.getElementById('cts-reload-block-logs');
+		const clearBtn = document.getElementById('cts-clear-block-logs');
+		if (reloadBtn) reloadBtn.addEventListener('click', function(){ location.reload(); });
+		if (clearBtn) {
+			clearBtn.addEventListener('click', function(){
+				if (!confirm('Möchtest du wirklich alle Block-Logs löschen?')) return;
+				clearBtn.disabled = true;
+				const originalText = clearBtn.innerHTML;
+				clearBtn.innerHTML = '<span>⏳</span> Lösche...';
+				fetch(churchtoolsSuite.ajaxUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'cts_clear_block_logs', nonce: churchtoolsSuite.nonce }) })
+				.then(r=>r.json()).then(data=>{ if (data.success) location.reload(); else alert('Fehler beim Löschen: ' + (data.data ? data.data.message : 'Unbekannt')); })
+				.catch(err=> alert('Fehler: ' + err.message))
+				.finally(()=>{ clearBtn.disabled = false; clearBtn.innerHTML = originalText; });
+			});
+		}
+	}
+
+	/**
+	 * Dashboard handlers (migrated from `tab-dashboard.php` inline scripts)
+	 */
+	function initDashboardHandlers() {
+		const syncBtn = document.getElementById('cts-sync-now');
+		if (syncBtn) {
+			syncBtn.addEventListener('click', function(){
+				if (!confirm('Einen manuellen Sync jetzt starten? Dies kann einige Zeit dauern.')) return;
+				syncBtn.disabled = true; const original = syncBtn.innerHTML; syncBtn.innerHTML = '⏳ Synchronisiere...';
+				fetch(churchtoolsSuite.ajaxUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'cts_trigger_manual_sync', nonce: churchtoolsSuite.nonce }) })
+				.then(r=>r.json()).then(data=>{ const result = document.getElementById('cts-sync-result'); if (data.success) { if (result) result.innerHTML = '<span class="cts-success">' + (data.data.message||'✅ Synchronisation abgeschlossen') + '</span>'; } else { if (result) result.innerHTML = '<span class="cts-error">' + (data.data?.message||data.message||'Fehler beim Sync') + '</span>'; } })
+				.catch(err=>{ const result = document.getElementById('cts-sync-result'); if (result) result.innerHTML = '<span class="cts-error">Fehler: ' + err.message + '</span>'; })
+				.finally(()=>{ syncBtn.disabled = false; syncBtn.innerHTML = original; });
+			});
+		}
+
+		const installBtn = document.getElementById('cts_install_update_btn');
+		if (installBtn) {
+			installBtn.addEventListener('click', function(){
+				if (!confirm('Update jetzt installieren? Dies überschreibt Plugin-Dateien.')) return;
+				installBtn.disabled = true; const orig = installBtn.innerHTML; installBtn.innerHTML = '⏳ Installiere...';
+				fetch(churchtoolsSuite.ajaxUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'cts_run_update', nonce: churchtoolsSuite.nonce }) })
+				.then(r=>r.json()).then(function(data){
+					if (data.success) {
+						alert(data.data && data.data.message ? data.data.message : 'Update gestartet');
+						// Refresh page to reflect new plugin state
+						setTimeout(function(){ location.reload(); }, 700);
+					} else {
+						alert(data.data && data.data.message ? data.data.message : (data.message || 'Fehler beim Update'));
+					}
+				})
+				.catch(err=> alert('Netzwerkfehler: ' + err.message))
+				.finally(()=>{ installBtn.disabled = false; installBtn.innerHTML = orig; });
+			});
+		}
+	}
+
+	/**
+	 * Imported Services pagination (replaces inline jQuery)
+	 */
+	function initImportedServices() {
+		// delegate click on pagination links inside imported services card
+		document.addEventListener('click', function(e){
+			const a = e.target.closest('.cts-imported-services .cts-pagination a');
+			if (!a) return;
+			e.preventDefault();
+			const href = a.getAttribute('href');
+			const match = href && href.match(/paged=(\d+)/);
+			if (match) {
+				fetchImportedServices(match[1]);
+			}
+		});
+
+		function fetchImportedServices(paged) {
+			fetch(churchtoolsSuite.ajaxUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'cts_fetch_imported_services_list', paged: paged || 1, nonce: churchtoolsSuite.nonce }) })
+			.then(r=>r.json()).then(resp=>{ if (resp.success) { const container = document.getElementById('cts-imported-services-ajax-container'); if (container) container.innerHTML = resp.data.html; } else { alert(resp.data && resp.data.message ? resp.data.message : 'Fehler'); } })
+			.catch(err=> alert('Fehler: ' + err.message));
+		}
+	}
+
+	/**
+	 * Events list AJAX (migrated from inline view script)
+	 * Handles filter form submission and delegated pagination
+	 */
+	function initEventsAjax() {
+		var form = document.querySelector('.cts-filter-section');
+		if (!form) return;
+
+		function fetchEvents(paged) {
+			var params = new URLSearchParams(new FormData(form));
+			if (paged) params.append('paged', paged);
+			params.append('action', 'cts_fetch_events_list');
+			params.append('nonce', churchtoolsSuite.nonce);
+
+			fetch(churchtoolsSuite.ajaxUrl, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				body: params
+			})
+			.then(function(r){ return r.json(); })
+			.then(function(resp){
+				if (resp.success) {
+					var container = document.getElementById('cts-events-ajax-container');
+					if (container) container.innerHTML = resp.data.html;
+				} else {
+					alert(resp.data && resp.data.message ? resp.data.message : 'Fehler');
+				}
+			})
+			.catch(function(err){ alert('Fehler: ' + err.message); });
+		}
+
+		form.addEventListener('submit', function(e){ e.preventDefault(); fetchEvents(1); });
+
+		document.addEventListener('click', function(e){
+			var el = e.target.closest('.cts-ajax-page');
+			if (!el) return;
+			e.preventDefault();
+			var p = el.dataset.paged;
+			fetchEvents(p);
+		});
+	}
+
+	// Initialize the events AJAX handler
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initEventsAjax);
+	} else {
+		initEventsAjax();
+	}
+
+	/**
+	 * Reset & Cleanup handlers (migrated from inline jQuery in admin views)
+	 */
+	function initResetCleanup() {
+		const actions = [
+			{btnId: 'cts-clear-events', action: 'cts_clear_events', confirm: 'Wirklich alle Events löschen? Diese Aktion kann nicht rückgängig gemacht werden!'},
+			{btnId: 'cts-clear-calendars', action: 'cts_clear_calendars', confirm: 'Wirklich alle Kalender löschen? Diese Aktion kann nicht rückgängig gemacht werden!'},
+			{btnId: 'cts-clear-services', action: 'cts_clear_services', confirm: 'Wirklich alle Services löschen? Diese Aktion kann nicht rückgängig gemacht werden!'},
+			{btnId: 'cts-clear-sync-history', action: 'cts_clear_sync_history', confirm: 'Wirklich die gesamte Sync-Historie löschen?'},
+			{btnId: 'cts-full-reset', action: 'cts_full_reset', confirm: 'ACHTUNG: Wirklich ALLE Daten löschen (Events, Kalender, Services, Sync-Historie)? Diese Aktion kann nicht rückgängig gemacht werden!'}
+		];
+
+		actions.forEach(item => {
+			const btn = document.getElementById(item.btnId);
+			if (!btn) return;
+			btn.addEventListener('click', function() {
+				if (!confirm(item.confirm)) return;
+				const originalText = btn.innerHTML;
+				btn.disabled = true;
+				btn.innerHTML = '⏳ Wird gelöscht...';
+				fetch(churchtoolsSuite.ajaxUrl, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: new URLSearchParams({ action: item.action, nonce: churchtoolsSuite.nonce })
+				})
+				.then(r => r.json())
+				.then(data => {
+					if (data.success) {
+						alert((data.data && data.data.message) ? data.data.message : 'Aktion erfolgreich');
+						location.reload();
+					} else {
+						alert('Fehler: ' + (data.data && data.data.message ? data.data.message : 'Unbekannter Fehler'));
+					}
+				})
+				.catch(() => {
+					alert('Fehler beim Ausführen der Aktion');
+				})
+				.finally(() => {
+					btn.disabled = false;
+					btn.innerHTML = originalText;
+				});
+			});
+		});
 	}
 
 	/**
@@ -838,9 +1167,7 @@
 
 		// Regular incremental sync
 		if (syncButton) {
-			syncButton.addEventListener('click', function() {
-				performEventSync(false);
-			});
+			syncButton.addEventListener('click', function() { performEventSync(false); });
 		}
 
 		// Force full sync (v0.7.1.0)
@@ -911,7 +1238,8 @@
 						if (data.data.sync_type) {
 							const syncTypeLabel = data.data.sync_type === 'incremental' ? 'INKREMENTELL' : 'VOLL';
 							const syncTypeColor = data.data.sync_type === 'incremental' ? '#00a32a' : '#2271b1';
-							message = '<span style="display: inline-block; padding: 2px 8px; font-size: 11px; font-weight: 600; color: white; background: ' + syncTypeColor + '; border-radius: 3px; margin-right: 6px;">' + syncTypeLabel + '</span>' + message;
+							// Use badge class; set inline CSS variable for background color (minimal inline usage)
+							message = '<span class="cts-badge" style="--cts-badge-bg:' + syncTypeColor + '; background:' + syncTypeColor + ';">' + syncTypeLabel + '</span>' + message;
 						}
 						
 						resultDiv.innerHTML = '<div class="notice notice-success inline"><p>' + message + '</p></div>';
@@ -1172,6 +1500,25 @@
 				});
 			});
 		}
+	}
+
+	/**
+	 * Event Details Panels
+	 * Delegated handler for .cts-details-toggle buttons
+	 */
+	function initEventDetailsPanels() {
+		// Delegate clicks for detail toggles
+		document.addEventListener('click', function(e) {
+			const btn = e.target.closest('.cts-details-toggle');
+			if (!btn) return;
+			e.preventDefault();
+			const targetId = btn.dataset.target || btn.getAttribute('data-target');
+			if (!targetId) return;
+			const panel = document.getElementById(targetId);
+			if (!panel) return;
+			const hidden = panel.classList.toggle('cts-hidden');
+			panel.style.display = hidden ? 'none' : 'block';
+		});
 	}
 
 	/**

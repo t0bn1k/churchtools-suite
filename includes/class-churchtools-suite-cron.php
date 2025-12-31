@@ -11,6 +11,34 @@ if (!defined('ABSPATH')) {
 }
 
 class ChurchTools_Suite_Cron {
+    /**
+     * Unified logger helper for cron
+     *
+     * @param string $message
+     * @param string $level  'info','warning','error','debug'
+     */
+    private static function log_message( string $message, string $level = 'info' ): void {
+        if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+            switch ( $level ) {
+                case 'error':
+                    ChurchTools_Suite_Logger::error( 'cron', $message );
+                    break;
+                case 'warning':
+                    ChurchTools_Suite_Logger::warning( 'cron', $message );
+                    break;
+                case 'debug':
+                    ChurchTools_Suite_Logger::debug( 'cron', $message );
+                    break;
+                case 'info':
+                default:
+                    ChurchTools_Suite_Logger::info( 'cron', $message );
+                    break;
+            }
+            return;
+        }
+
+
+    }
     
     /**
      * Initialize cron system
@@ -161,7 +189,7 @@ class ChurchTools_Suite_Cron {
         if (!$client->is_authenticated()) {
             $login_result = $client->login();
             if (!$login_result['success']) {
-                error_log('ChurchTools Suite: Session Keep-Alive Login fehlgeschlagen - ' . $login_result['message']);
+                    self::log_message( 'Session Keep-Alive Login fehlgeschlagen - ' . $login_result['message'], 'warning' );
                 // Still attempt to reschedule a keepalive in short time
                 self::reschedule_keepalive_after_attempt($client);
                 return;
@@ -172,7 +200,7 @@ class ChurchTools_Suite_Cron {
         $result = $client->api_request('whoami', 'GET');
 
         if (is_wp_error($result)) {
-            error_log('ChurchTools Suite: Session Keep-Alive fehlgeschlagen - ' . $result->get_error_message());
+            self::log_message( 'Session Keep-Alive fehlgeschlagen - ' . $result->get_error_message(), 'error' );
         } else {
             // Update last keepalive timestamp
             update_option('churchtools_suite_last_keepalive', current_time('mysql'));
@@ -299,15 +327,31 @@ class ChurchTools_Suite_Cron {
             }
             
             // Success Log
-            error_log(sprintf(
-                'ChurchTools Suite Auto-Sync [SUCCESS]: %d Kalender, %d Events gefunden, %d neu, %d aktualisiert, %d übersprungen, %d Services importiert',
-                $stats['calendars_processed'],
-                $stats['events_found'],
-                $stats['events_inserted'],
-                $stats['events_updated'],
-                $stats['events_skipped'],
-                $stats['services_imported']
-            ));
+            if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+                ChurchTools_Suite_Logger::info(
+                    'auto_sync',
+                    sprintf(
+                        'Auto-Sync success: %d calendars, %d events found, %d inserted, %d updated, %d skipped, %d services imported',
+                        $stats['calendars_processed'],
+                        $stats['events_found'],
+                        $stats['events_inserted'],
+                        $stats['events_updated'],
+                        $stats['events_skipped'],
+                        $stats['services_imported']
+                    ),
+                    $stats
+                );
+            } else {
+                self::log_message(sprintf(
+                    'ChurchTools Suite Auto-Sync [SUCCESS]: %d Kalender, %d Events gefunden, %d neu, %d aktualisiert, %d übersprungen, %d Services importiert',
+                    $stats['calendars_processed'],
+                    $stats['events_found'],
+                    $stats['events_inserted'],
+                    $stats['events_updated'],
+                    $stats['events_skipped'],
+                    $stats['services_imported']
+                ), 'info');
+            }
             
         } catch (Exception $e) {
             // Error - Details speichern
@@ -323,16 +367,26 @@ class ChurchTools_Suite_Cron {
                 $history_repo->complete_sync($sync_id, [], $error_message);
             }
             
-            // Error Log mit Stack Trace
-            error_log(sprintf(
-                'ChurchTools Suite Auto-Sync [ERROR]: %s (Zeit: %s)',
-                $error_message,
-                $error_time
-            ));
-            
-            // Detaillierter Stack Trace im Debug-Modus
+            // Error Log with Stack Trace
+            if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+                ChurchTools_Suite_Logger::error(
+                    'auto_sync',
+                    sprintf('Auto-Sync error: %s (time: %s)', $error_message, $error_time),
+                    ['exception_message' => $error_message, 'exception' => $e]
+                );
+            } else {
+                self::log_message(sprintf(
+                    'ChurchTools Suite Auto-Sync [ERROR]: %s (Zeit: %s)',
+                    $error_message,
+                    $error_time
+                ), 'error');
+            }
+
+            // Detailed Stack Trace in debug mode
             if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('Stack Trace: ' . $e->getTraceAsString());
+                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                    self::log_message( 'Stack Trace: ' . $e->getTraceAsString(), 'debug' );
+                }
             }
         }
     }

@@ -179,28 +179,7 @@ $total_pages = ceil( $total_count / $limit );
 			</div>
 		<?php endif; ?>
 
-		<script>
-		jQuery(function($){
-			function fetchServices(paged){
-				var data = { action: 'cts_fetch_imported_services_list', paged: paged || 1, nonce: churchtoolsSuite.nonce };
-				$.post(churchtoolsSuite.ajaxUrl, data, function(resp){
-					if (resp.success){
-						$('#cts-imported-services-ajax-container').html(resp.data.html);
-					} else {
-						alert(resp.data && resp.data.message ? resp.data.message : 'Fehler');
-					}
-				}, 'json');
-			}
-
-			// Intercept pagination links inside this card
-			$(document).on('click', '.cts-imported-services .cts-pagination a', function(e){
-				e.preventDefault();
-				var href = $(this).attr('href');
-				var match = href && href.match(/paged=(\d+)/);
-				if ( match ) { fetchServices( match[1] ); }
-			});
-		});
-		</script>
+<!-- Imported services pagination JS migrated to assets/js/churchtools-suite-admin.js (initImportedServices) -->
 	<?php endif; ?>
 	
 </div>

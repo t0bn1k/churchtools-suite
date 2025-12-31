@@ -101,7 +101,7 @@ $total_pages = ceil( $total / $limit );
 					<input type="date" name="to" value="<?php echo esc_attr( $to ); ?>" class="cts-form-input" />
 				</div>
 				
-				<div class="cts-form-group" style="grid-column: span 2;">
+				<div class="cts-form-group cts-col-span-2">
 					<label>🗂️ <?php esc_html_e( 'Kalender', 'churchtools-suite' ); ?></label>
 					<select name="calendar_id" class="cts-form-input">
 						<option value=""><?php esc_html_e( 'Alle Kalender', 'churchtools-suite' ); ?></option>
@@ -329,12 +329,10 @@ $total_pages = ceil( $total / $limit );
 								
 								<td class="cts-event-details">
 									<?php if ( ! empty( $event->event_description ) || ! empty( $event->appointment_description ) ) : ?>
-										<button type="button" 
-										        class="cts-btn cts-btn-small cts-details-toggle" 
-									        onclick="var panel = document.getElementById('event-details-<?php echo esc_attr( $event->id ); ?>'); panel.classList.toggle('cts-hidden'); panel.style.display = panel.classList.contains('cts-hidden') ? 'none' : 'block';">
+										<button type="button" class="cts-btn cts-btn-small cts-details-toggle" data-target="event-details-<?php echo esc_attr( $event->id ); ?>">
 											📝 <?php esc_html_e( 'Infos', 'churchtools-suite' ); ?>
 										</button>
-										<div id="event-details-<?php echo esc_attr( $event->id ); ?>" class="cts-event-details-panel cts-hidden" style="display:none;">
+										<div id="event-details-<?php echo esc_attr( $event->id ); ?>" class="cts-event-details-panel cts-hidden">
 											<?php if ( ! empty( $event->event_description ) ) : ?>
 												<div class="cts-description-section">
 													<strong>🎯 <?php esc_html_e( 'Serie / Event:', 'churchtools-suite' ); ?></strong>
@@ -360,37 +358,7 @@ $total_pages = ceil( $total / $limit );
 		</div>
 		<!-- Pagination -->
 
-		<script>
-		jQuery(function($){
-			var $form = $('.cts-filter-section');
-			function fetchEvents(paged){
-				var data = $form.serializeArray();
-				if (paged) data.push({name:'paged', value: paged});
-				data.push({name:'action', value:'cts_fetch_events_list'});
-				data.push({name:'nonce', value: churchtoolsSuite.nonce});
-				$.post(churchtoolsSuite.ajaxUrl, data, function(resp){
-					if (resp.success){
-						$('#cts-events-ajax-container').html(resp.data.html);
-					} else {
-						alert(resp.data && resp.data.message ? resp.data.message : 'Fehler');
-					}
-				}, 'json');
-			}
 
-			// Intercept filter submit
-			$form.on('submit', function(e){
-				e.preventDefault();
-				fetchEvents(1);
-			});
-
-			// Bind pagination buttons (delegated)
-			$(document).on('click', '.cts-ajax-page', function(e){
-				e.preventDefault();
-				var p = $(this).data('paged');
-				fetchEvents(p);
-			});
-		});
-		</script>
 			<?php if ( $total_pages > 1 ) : ?>
 				<div class="cts-pagination">
 					<?php

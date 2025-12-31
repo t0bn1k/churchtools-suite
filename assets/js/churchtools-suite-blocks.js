@@ -11,7 +11,9 @@
 (function() {
 	'use strict';
 	
-	console.log('✅ ChurchTools Suite Blocks JS geladen! Version 0.6.5.7 - Collapsible Panels!');
+	if ( typeof window.churchtoolsSuite !== 'undefined' && window.churchtoolsSuite.debug ) {
+		console.log('✅ ChurchTools Suite Blocks JS geladen! Version 0.6.5.7 - Collapsible Panels!');
+	}
 	
 	const { registerBlockType } = wp.blocks;
 	const { InspectorControls, useBlockProps } = wp.blockEditor || wp.editor;
@@ -53,7 +55,9 @@
 					setLoading(false);
 				})
 				.catch(function(error) {
-					console.error('Fehler beim Laden der Presets:', error);
+					if ( typeof window.churchtoolsSuite !== 'undefined' && window.churchtoolsSuite.debug ) {
+						console.error('Fehler beim Laden der Presets:', error);
+					}
 					setLoading(false);
 				});
 		}, []);

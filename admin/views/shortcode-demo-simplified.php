@@ -21,36 +21,8 @@ $demo_types = [
 		'count' => 8,
 		'description' => 'Monatsansicht, Wochenansicht, Jahresansicht'
 	],
-	'list' => [
-		'icon' => '📋',
-		'name' => 'List Views',
-		'count' => 10,
-		'description' => 'Classic, Modern, Minimal, mit Services'
-	],
-	'grid' => [
-		'icon' => '▦',
-		'name' => 'Grid Views',
-		'count' => 14,
-		'description' => 'Simple, Modern, Colorful, verschiedene Spalten'
-	],
-	'slider' => [
-		'icon' => '🎠',
-		'name' => 'Slider Views',
-		'count' => 5,
-		'description' => 'Autoplay, verschiedene Stile'
-	],
-	'countdown' => [
-		'icon' => '⏱️',
-		'name' => 'Countdown Views',
-		'count' => 3,
-		'description' => 'Countdown bis zum nächsten Event'
-	],
-	'cover' => [
-		'icon' => '🎨',
-		'name' => 'Cover Views',
-		'count' => 5,
-		'description' => 'Hero-Banner, große Teaserbilder'
-	],
+
+	</div>
 	'timetable' => [
 		'icon' => '🗓️',
 		'name' => 'Timetable Views',
@@ -107,21 +79,21 @@ $demo_types = [
 			<!-- Overview Page -->
 			
 			<!-- Quick Stats -->
-			<div class="cts-grid cts-grid-3" style="margin-bottom: 30px;">
+			<div class="cts-grid cts-grid-3 cts-mb-30">
 				<div class="cts-card">
-					<div class="cts-card-body" style="text-align: center;">
+					<div class="cts-card-body cts-text-center">
 						<div class="cts-stat-number">11</div>
 						<p class="cts-card-detail"><?php esc_html_e( 'Shortcode-Typen', 'churchtools-suite' ); ?></p>
 					</div>
 				</div>
 				<div class="cts-card">
-					<div class="cts-card-body" style="text-align: center;">
+					<div class="cts-card-body cts-text-center">
 						<div class="cts-stat-number">60+</div>
 						<p class="cts-card-detail"><?php esc_html_e( 'View-Varianten', 'churchtools-suite' ); ?></p>
 					</div>
 				</div>
 				<div class="cts-card">
-					<div class="cts-card-body" style="text-align: center;">
+					<div class="cts-card-body cts-text-center">
 						<div class="cts-stat-number">50+</div>
 						<p class="cts-card-detail"><?php esc_html_e( 'Parameter', 'churchtools-suite' ); ?></p>
 					</div>
@@ -142,22 +114,22 @@ $demo_types = [
 			</div>
 
 			<!-- Quick Reference -->
-			<div class="cts-card" style="max-width: 900px; margin: 40px auto 0;">
+			<div class="cts-card cts-maxw-900 cts-mt-40 cts-center">
 				<div class="cts-card-header">
 					<span class="cts-card-icon">💡</span>
 					<h3><?php esc_html_e( 'Schnellstart', 'churchtools-suite' ); ?></h3>
 				</div>
 				<div class="cts-card-body">
-					<ol style="margin: 0; padding-left: 20px;">
-						<li style="margin-bottom: 12px;">
+					<ol class="cts-list-reset">
+						<li class="cts-mb-12">
 							<strong><?php esc_html_e( 'Typ auswählen', 'churchtools-suite' ); ?></strong> - 
 							<?php esc_html_e( 'Klicke auf eine der Karten oben', 'churchtools-suite' ); ?>
 						</li>
-						<li style="margin-bottom: 12px;">
+						<li class="cts-mb-12">
 							<strong><?php esc_html_e( 'Live-Demo ansehen', 'churchtools-suite' ); ?></strong> - 
 							<?php esc_html_e( 'Alle Varianten werden mit echten Daten gerendert', 'churchtools-suite' ); ?>
 						</li>
-						<li style="margin-bottom: 12px;">
+						<li class="cts-mb-12">
 							<strong><?php esc_html_e( 'Shortcode kopieren', 'churchtools-suite' ); ?></strong> - 
 							<?php esc_html_e( 'Verwende den Code in deinen Seiten oder Beiträgen', 'churchtools-suite' ); ?>
 						</li>
@@ -169,7 +141,7 @@ $demo_types = [
 			<!-- Detail Page for specific type -->
 			
 			<!-- Back Button -->
-			<div style="margin-bottom: 20px;">
+			<div class="cts-mb-20">
 				<a href="?page=churchtools-suite-demo" class="button">
 					<span class="dashicons dashicons-arrow-left-alt2" style="margin-top: 3px;"></span>
 					<?php esc_html_e( 'Zurück zur Übersicht', 'churchtools-suite' ); ?>

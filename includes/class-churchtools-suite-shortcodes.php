@@ -752,7 +752,11 @@ class ChurchTools_Suite_Shortcodes {
 		
 		// Debug output (only when WP_DEBUG is enabled)
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			error_log( 'ChurchTools Suite Shortcode: Getting events with filters: ' . print_r( $filters, true ) );
+			if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+				ChurchTools_Suite_Logger::debug( 'shortcode', 'Getting events with filters', [ 'filters' => $filters ] );
+			} else {
+				error_log( 'ChurchTools Suite Shortcode: Getting events with filters: ' . print_r( $filters, true ) );
+			}
 		}
 		
 		$events = self::$data_provider->get_events( $filters );
@@ -764,7 +768,11 @@ class ChurchTools_Suite_Shortcodes {
 		
 		// Debug output
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			error_log( 'ChurchTools Suite Shortcode: Found ' . count( $events ) . ' events' );
+			if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+				ChurchTools_Suite_Logger::debug( 'shortcode', 'Found events', [ 'count' => count( $events ) ] );
+			} else {
+				error_log( 'ChurchTools Suite Shortcode: Found ' . count( $events ) . ' events' );
+			}
 		}
 		
 		return $events;

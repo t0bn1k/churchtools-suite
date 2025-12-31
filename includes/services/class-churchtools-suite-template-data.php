@@ -109,17 +109,25 @@ class ChurchTools_Suite_Template_Data {
 		
 		// Debug output
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			error_log( 'ChurchTools Suite Template Data: SQL Query: ' . $sql );
-			error_log( 'ChurchTools Suite Template Data: Filters: ' . print_r( $filters, true ) );
+			if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+				ChurchTools_Suite_Logger::debug( 'template_data', 'SQL Query', [ 'sql' => $sql, 'filters' => $filters ] );
+			} else {
+				error_log( 'ChurchTools Suite Template Data: SQL Query: ' . $sql );
+				error_log( 'ChurchTools Suite Template Data: Filters: ' . print_r( $filters, true ) );
+			}
 		}
 		
 		$results = $wpdb->get_results( $sql, ARRAY_A );
 		
 		// Debug output
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			error_log( 'ChurchTools Suite Template Data: Found ' . ( $results ? count( $results ) : 0 ) . ' events' );
-			if ( $wpdb->last_error ) {
-				error_log( 'ChurchTools Suite Template Data: SQL Error: ' . $wpdb->last_error );
+			if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+				ChurchTools_Suite_Logger::debug( 'template_data', 'Query results', [ 'result_count' => ( $results ? count( $results ) : 0 ), 'sql_error' => $wpdb->last_error ] );
+			} else {
+				error_log( 'ChurchTools Suite Template Data: Found ' . ( $results ? count( $results ) : 0 ) . ' events' );
+				if ( $wpdb->last_error ) {
+					error_log( 'ChurchTools Suite Template Data: SQL Error: ' . $wpdb->last_error );
+				}
 			}
 		}
 		

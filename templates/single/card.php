@@ -129,7 +129,7 @@ $calendar_color = ! empty( $calendar->color ) ? $calendar->color : '#0073aa';
 		
 		<!-- Card Footer -->
 		<div class="cts-card-footer">
-			<button class="cts-btn-back" onclick="window.history.back();">
+			<button class="cts-btn-back cts-back-button">
 				<?php esc_html_e( 'Zurück', 'churchtools-suite' ); ?>
 			</button>
 		</div>

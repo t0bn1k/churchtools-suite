@@ -118,15 +118,13 @@
 ## v0.3.13.0 - Services UI in Events-Tab (11. Dezember 2025)
 
 ### Features
-- ✅ **Events-Tab erweitert** - Services-Spalte in Event-Tabelle
   - Service-Name mit Person-Name anzeigen
   - CSS-Styling für Services-Anzeige
   - Mehrere Services pro Event
 
 ### Files
-- `admin/views/tab-events.php`
-- `admin/css/churchtools-suite-admin.css`
-
+ - `admin/views/tab-events.php`
+ - `assets/css/churchtools-suite-admin.css`
 ---
 
 ## v0.3.12.0 - Event Services Sync (10. Dezember 2025)

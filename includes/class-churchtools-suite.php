@@ -77,6 +77,9 @@ class ChurchTools_Suite {
 			require_once CHURCHTOOLS_SUITE_PATH . 'includes/debug-blocks-shortcode.php';
 		}
 
+		// PlugDebug / external debug integration
+		require_once CHURCHTOOLS_SUITE_PATH . 'includes/integrations/class-churchtools-suite-plugdebug.php';
+
 		// Auto updater (checks GitHub releases and installs ZIP)
 		require_once CHURCHTOOLS_SUITE_PATH . 'includes/class-churchtools-suite-auto-updater.php';
 		// Update checker (injects GitHub release into WP update transient)

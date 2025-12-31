@@ -134,7 +134,7 @@ $calendar_color = ! empty( $calendar->color ) ? $calendar->color : '#0073aa';
 	
 	<!-- Actions -->
 	<div class="cts-single-actions">
-		<button class="cts-btn-primary" onclick="window.history.back();">
+		<button class="cts-btn-primary cts-back-button">
 			<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 				<line x1="19" y1="12" x2="5" y2="12"/>
 				<polyline points="12 19 5 12 12 5"/>

@@ -88,7 +88,11 @@ class ChurchTools_Suite_Template_Loader {
 			}
 			
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				error_log( $error_msg );
+				if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+					ChurchTools_Suite_Logger::debug( 'template_loader', $error_msg );
+				} else {
+					error_log( $error_msg );
+				}
 			}
 			
 			// Return error message for frontend

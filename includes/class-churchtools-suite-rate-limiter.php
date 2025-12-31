@@ -180,13 +180,23 @@ class ChurchTools_Suite_Rate_Limiter {
 		
 		// Log to debug.log in development
 		if ( WP_DEBUG && WP_DEBUG_LOG ) {
-			error_log( sprintf(
-				'ChurchTools Suite Rate Limit: %s blocked (%s/%s) - %d requests',
-				$identifier,
-				$context,
-				$window,
-				$count
-			) );
+			if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+				ChurchTools_Suite_Logger::warning( 'rate_limit', sprintf(
+					'Rate limit blocked - %s (%s/%s) - %d requests',
+					$identifier,
+					$context,
+					$window,
+					$count
+				), [ 'identifier' => $identifier, 'context' => $context, 'window' => $window, 'count' => $count ] );
+			} else {
+				error_log( sprintf(
+					'ChurchTools Suite Rate Limit: %s blocked (%s/%s) - %d requests',
+					$identifier,
+					$context,
+					$window,
+					$count
+				) );
+			}
 		}
 	}
 	
