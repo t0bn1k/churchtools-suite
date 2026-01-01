@@ -130,6 +130,10 @@ $shortcodes = [
 			<span id="cts-create-icon">➕</span>
 			<span id="cts-create-label"><?php esc_html_e( 'Neues Preset erstellen', 'churchtools-suite' ); ?></span>
 		</a>
+		<a href="#" class="cts-tab" data-tab="demo">
+			<span>🎯</span>
+			<?php esc_html_e( 'Demo & Live-Views', 'churchtools-suite' ); ?>
+		</a>
 	</div>
 	
 	<!-- Tab: Standard Shortcodes -->
@@ -377,6 +381,71 @@ $shortcodes = [
 	</div>
 
 	<!-- Tab: Demo & Live Views -->
+	<div id="tab-demo" class="cts-tab-content" style="display: none;">
+		<?php
+		// Include Demo-Router (shortcode-demo.php content without header)
+		require_once __DIR__ . '/demos/demo-helpers.php';
+		
+		$selected_type = isset( $_GET['type'] ) ? sanitize_key( $_GET['type'] ) : '';
+		?>
+		
+		<div class="cts-demo-content">
+			<?php
+			cts_demo_embed_public_css();
+			?>
+			
+			<?php if ( ! $selected_type ) : ?>
+				<!-- Demo Overview Grid -->
+				<div class="cts-demo-overview">
+					<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px;">
+						<?php
+						$demo_types = [
+							'list' => ['icon' => '📋', 'name' => 'List Views', 'count' => 10, 'status' => 'ready'],
+							'calendar' => ['icon' => '📅', 'name' => 'Calendar Views', 'count' => 8, 'status' => 'ready'],
+							'grid' => ['icon' => '▦', 'name' => 'Grid Views', 'count' => 12, 'status' => 'ready'],
+							'slider' => ['icon' => '🎠', 'name' => 'Slider Views', 'count' => 5, 'status' => 'ready'],
+							'countdown' => ['icon' => '⏱️', 'name' => 'Countdown', 'count' => 3, 'status' => 'ready'],
+							'cover' => ['icon' => '🎨', 'name' => 'Cover Views', 'count' => 5, 'status' => 'ready'],
+							'carousel' => ['icon' => '🎡', 'name' => 'Carousel', 'count' => 4, 'status' => 'ready'],
+							'timetable' => ['icon' => '🗓️', 'name' => 'Timetable', 'count' => 3, 'status' => 'ready'],
+							'widget' => ['icon' => '🎁', 'name' => 'Widgets', 'count' => 3, 'status' => 'ready'],
+							'map' => ['icon' => '🗺️', 'name' => 'Map Views', 'count' => 3, 'status' => 'ready'],
+							'search' => ['icon' => '🔍', 'name' => 'Search', 'count' => 2, 'status' => 'ready']
+						];
+						foreach ( $demo_types as $type_key => $type_data ) :
+							$is_ready = $type_data['status'] === 'ready';
+							?>
+							<a href="?page=churchtools-suite-shortcodes&tab=demo&type=<?php echo esc_attr( $type_key ); ?>" class="cts-card" style="text-decoration: none; transition: all 0.2s; border: 2px solid #e5e7eb; <?php echo ! $is_ready ? 'opacity: 0.5; pointer-events: none;' : ''; ?>">
+								<div class="cts-card-body" style="text-align: center; padding: 24px;">
+									<div style="font-size: 48px; margin-bottom: 12px;"><?php echo esc_html( $type_data['icon'] ); ?></div>
+									<h3 style="margin: 0 0 8px; font-size: 16px; color: #1d2327;"><?php echo esc_html( $type_data['name'] ); ?></h3>
+									<p style="margin: 0; color: #646970; font-size: 13px;"><?php echo esc_html( $type_data['count'] ); ?> Varianten</p>
+									<?php if ( $is_ready ) : ?>
+										<span style="display: inline-block; margin-top: 12px; padding: 4px 12px; background: #00a32a; color: #fff; border-radius: 12px; font-size: 11px; font-weight: 600;">✓ Verfügbar</span>
+									<?php endif; ?>
+								</div>
+							</a>
+						<?php endforeach; ?>
+					</div>
+				</div>
+			<?php else : ?>
+				<!-- Demo Type View -->
+				<div style="margin-bottom: 20px;">
+					<a href="?page=churchtools-suite-shortcodes&tab=demo" class="cts-button cts-button-secondary">
+						<span>←</span> <?php esc_html_e( 'Zurück zur Übersicht', 'churchtools-suite' ); ?>
+					</a>
+				</div>
+				<?php
+				$demo_file = __DIR__ . '/demos/demo-' . $selected_type . '.php';
+				if ( file_exists( $demo_file ) ) {
+					include $demo_file;
+				} else {
+					echo '<div class="cts-notice cts-notice-error"><p>' . esc_html__( 'Demo-Typ nicht gefunden.', 'churchtools-suite' ) . '</p></div>';
+				}
+				?>
+			<?php endif; ?>
+		</div>
+	</div>
 
 	
 </div>
