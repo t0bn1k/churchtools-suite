@@ -138,26 +138,4 @@ $last_sync = get_option('churchtools_suite_calendars_last_sync', null);
 	
 </div>
 
-<style>
-.cts-badge {
-	display: inline-block;
-	padding: 3px 8px;
-	font-size: 12px;
-	font-weight: 600;
-	border-radius: 3px;
-}
-.cts-badge-success {
-	background: #d4edda;
-	color: #155724;
-}
-.cts-badge-secondary {
-	background: #e2e3e5;
-	color: #383d41;
-}
-.cts-info {
-	background: #f0f0f1;
-	padding: 10px;
-	border-left: 4px solid #72aee6;
-	margin-bottom: 15px;
-}
-</style>
+<!-- Badge styles migrated to assets/css/admin.css (v0.9.4.7) -->

@@ -34,6 +34,7 @@
 			initResetCleanup();
 		initShortcodeGenerator();
 		initEventDetailsPanels(); // v0.9.2.0
+		initAdvancedSettings(); // v0.9.4.7
 		// Migrated view inits
 		initDemoTabs();
 		initDemoCopyHtml();
@@ -1259,6 +1260,146 @@
 			.finally(() => {
 				button.disabled = false;
 				button.innerHTML = originalText;
+			});
+		}
+	}
+
+	/**
+	 * Advanced Settings: Update Check & Log Management
+	 * Migrated from settings/subtab-advanced.php inline jQuery (v0.9.4.7)
+	 */
+	function initAdvancedSettings() {
+		// Manual Update Check Button
+		const updateBtn = document.getElementById('cts_manual_update_btn');
+		if (updateBtn) {
+			updateBtn.addEventListener('click', function(e) {
+				e.preventDefault();
+				const btn = this;
+				btn.disabled = true;
+				btn.textContent = '⏳ Prüfe...';
+				
+				fetch(churchtoolsSuite.ajaxUrl, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: new URLSearchParams({
+						action: 'cts_manual_update',
+						nonce: churchtoolsSuite.nonce
+					})
+				})
+				.then(r => r.json())
+				.then(resp => {
+					if (resp.success && resp.data) {
+						const data = resp.data.data || resp.data;
+						// Only show modal if update available
+						if (!data.is_update) {
+							alert(resp.data.message || 'Keine neuere Version verfügbar.');
+							return;
+						}
+						const html = '<p><strong>Version:</strong> ' + (data.latest_version || data.latest_version) + '</p>' +
+									 '<p><strong>Release:</strong> <a href="' + (data.html_url || '#') + '" target="_blank">' + (data.tag_name || '') + '</a></p>' +
+									 '<p><strong>Paket:</strong> ' + (data.zip_url ? ('<a href="' + data.zip_url + '" target="_blank">Download</a>') : 'Kein Paket verfügbar') + '</p>';
+						const bodyEl = document.getElementById('cts_update_body');
+						const modalEl = document.getElementById('cts_update_modal');
+						if (bodyEl) bodyEl.innerHTML = html;
+						if (modalEl) modalEl.style.display = 'block';
+					} else if (resp.success) {
+						alert(resp.data.message || 'Update-Prüfung abgeschlossen.');
+					} else {
+						alert(resp.data && resp.data.message ? resp.data.message : 'Fehler bei Update-Prüfung.');
+					}
+				})
+				.catch(() => {
+					alert('Netzwerkfehler beim Auslösen der Update-Prüfung.');
+				})
+				.finally(() => {
+					btn.disabled = false;
+					btn.textContent = '🔄 Manuelles Update prüfen';
+				});
+			});
+		}
+		
+		// Close Update Modal
+		const closeBtn = document.getElementById('cts_close_update_btn');
+		if (closeBtn) {
+			closeBtn.addEventListener('click', function() {
+				const modalEl = document.getElementById('cts_update_modal');
+				if (modalEl) modalEl.style.display = 'none';
+			});
+		}
+		
+		// Start Update Installation
+		const startBtn = document.getElementById('cts_start_update_btn');
+		if (startBtn) {
+			startBtn.addEventListener('click', function() {
+				if (!confirm('Update jetzt installieren? Dies überschreibt Plugin-Dateien.')) {
+					return;
+				}
+				const btn = this;
+				btn.disabled = true;
+				btn.textContent = '⏳ Installiere...';
+				
+				fetch(churchtoolsSuite.ajaxUrl, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: new URLSearchParams({
+						action: 'cts_run_update',
+						nonce: churchtoolsSuite.nonce
+					})
+				})
+				.then(r => r.json())
+				.then(resp => {
+					if (resp.success) {
+						alert(resp.data.message || 'Update gestartet.');
+					} else {
+						alert(resp.data && resp.data.message ? resp.data.message : 'Fehler beim Starten des Updates.');
+					}
+					const modalEl = document.getElementById('cts_update_modal');
+					if (modalEl) modalEl.style.display = 'none';
+				})
+				.catch(() => {
+					alert('Netzwerkfehler beim Starten des Updates.');
+				})
+				.finally(() => {
+					btn.disabled = false;
+					btn.textContent = 'Update installieren';
+				});
+			});
+		}
+		
+		// Clear Logs Button
+		const clearLogsBtn = document.getElementById('cts_clear_logs_btn');
+		if (clearLogsBtn) {
+			clearLogsBtn.addEventListener('click', function(e) {
+				e.preventDefault();
+				if (!confirm('Alle Plugin-Logs unwiderruflich löschen?')) return;
+				
+				const btn = this;
+				btn.disabled = true;
+				btn.textContent = '⏳ Lösche...';
+				
+				fetch(churchtoolsSuite.ajaxUrl, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: new URLSearchParams({
+						action: 'cts_clear_logs',
+						nonce: churchtoolsSuite.nonce
+					})
+				})
+				.then(r => r.json())
+				.then(resp => {
+					if (resp.success) {
+						alert('Logs wurden gelöscht.');
+					} else {
+						alert((resp.data && resp.data.message) ? resp.data.message : 'Fehler beim Löschen der Logs.');
+					}
+				})
+				.catch(() => {
+					alert('Netzwerkfehler beim Löschen der Logs.');
+				})
+				.finally(() => {
+					btn.disabled = false;
+					btn.textContent = '🗑️ Log löschen';
+				});
 			});
 		}
 	}

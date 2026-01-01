@@ -162,98 +162,19 @@ $auto_update_level = get_option( 'churchtools_suite_auto_update_level', 'none' )
 		<p style="margin-top:12px;">
 			<button type="button" id="cts_start_update_btn" class="cts-button cts-button-danger"><?php esc_html_e( 'Update installieren', 'churchtools-suite' ); ?></button>
 			<button type="button" id="cts_close_update_btn" class="cts-button" style="margin-left:8px;"><?php esc_html_e( 'Abbrechen', 'churchtools-suite' ); ?></button>
+	</p>
+</div>
+
+<!-- Modal styles & scripts migrated to assets/css/admin.css & assets/js/admin.js (v0.9.4.7) -->
+
+<!-- Update Modal Dialog -->
+<div id="cts_update_modal" class="cts-modal-overlay" style="display:none;">
+	<div class="cts-modal">
+		<h2><?php esc_html_e( 'Update verfügbar', 'churchtools-suite' ); ?></h2>
+		<div id="cts_update_body"></div>
+		<p style="margin-top:16px;text-align:right;">
+			<button id="cts_close_update_btn" class="button" style="margin-right:8px;"><?php esc_html_e( 'Schließen', 'churchtools-suite' ); ?></button>
+			<button id="cts_start_update_btn" class="button button-primary"><?php esc_html_e( 'Update installieren', 'churchtools-suite' ); ?></button>
 		</p>
 	</div>
 </div>
-
-<style>
-.cts-modal-overlay{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.5);}
-.cts-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;padding:20px;border-radius:6px;max-width:640px;width:90%;box-shadow:0 8px 24px rgba(0,0,0,0.2);}
-</style>
-
-<script type="text/javascript">
-/* <![CDATA[ */
-(function($){
-   $('#cts_manual_update_btn').on('click', function(e){
-	   e.preventDefault();
-	   var $btn = $(this);
-	   $btn.prop('disabled', true).text('⏳ Prüfe...');
-	   $.post( churchtoolsSuite.ajaxUrl, {
-		   action: 'cts_manual_update',
-		   nonce: churchtoolsSuite.nonce
-	   }).done(function(resp){
-		   if ( resp.success && resp.data ) {
-			   var data = resp.data.data || resp.data; // older/newer shapes
-			   // Only show modal if an update is actually available
-			   if ( ! data.is_update ) {
-				   alert( resp.data.message || '<?php esc_html_e( 'Keine neuere Version verfügbar.', 'churchtools-suite' ); ?>' );
-				   return;
-			   }
-			   var html = '<p><strong><?php esc_html_e( 'Version', 'churchtools-suite' ); ?>:</strong> ' + (data.latest_version || data.latest_version) + '</p>' +
-						  '<p><strong><?php esc_html_e( 'Release', 'churchtools-suite' ); ?>:</strong> <a href="' + (data.html_url || '#') + '" target="_blank">' + (data.tag_name || '') + '</a></p>' +
-						  '<p><strong><?php esc_html_e( 'Paket', 'churchtools-suite' ); ?>:</strong> ' + (data.zip_url ? ('<a href="' + data.zip_url + '" target="_blank">Download</a>') : '<?php esc_html_e( 'Kein Paket verfügbar', 'churchtools-suite' ); ?>') + '</p>';
-			   $('#cts_update_body').html( html );
-			   $('#cts_update_modal').show();
-		   } else if ( resp.success ) {
-			   alert( resp.data.message || 'Update-Prüfung abgeschlossen.' );
-		   } else {
-			   alert( resp.data && resp.data.message ? resp.data.message : 'Fehler bei Update-Prüfung.' );
-		   }
-	   }).fail(function(){
-		   alert('Netzwerkfehler beim Auslösen der Update-Prüfung.');
-	   }).always(function(){
-		   $btn.prop('disabled', false).text('🔄 <?php esc_html_e( 'Manuelles Update prüfen', 'churchtools-suite' ); ?>');
-	   });
-   });
-
-   $('#cts_close_update_btn').on('click', function(){
-	   $('#cts_update_modal').hide();
-   });
-
-   $('#cts_start_update_btn').on('click', function(){
-	   if ( ! confirm('<?php esc_html_e( "Update jetzt installieren? Dies überschreibt Plugin-Dateien.", "churchtools-suite" ); ?>') ) {
-		   return;
-	   }
-	   var $btn = $(this);
-	   $btn.prop('disabled', true).text('⏳ Installiere...');
-	   $.post( churchtoolsSuite.ajaxUrl, {
-		   action: 'cts_run_update',
-		   nonce: churchtoolsSuite.nonce
-	   }).done(function(resp){
-		   if ( resp.success ) {
-			   alert( resp.data.message || 'Update gestartet.' );
-		   } else {
-			   alert( resp.data && resp.data.message ? resp.data.message : 'Fehler beim Starten des Updates.' );
-		   }
-		   $('#cts_update_modal').hide();
-	   }).fail(function(){
-		   alert('Netzwerkfehler beim Starten des Updates.');
-	   }).always(function(){
-		   $btn.prop('disabled', false).text('<?php esc_html_e( 'Update installieren', 'churchtools-suite' ); ?>');
-	   });
-   });
-
-   // Log löschen Button
-   $('#cts_clear_logs_btn').on('click', function(e){
-	   e.preventDefault();
-	   if (!confirm('<?php esc_html_e( 'Alle Plugin-Logs unwiderruflich löschen?', 'churchtools-suite' ); ?>')) return;
-	   var $btn = $(this);
-	   $btn.prop('disabled', true).text('⏳ Lösche...');
-	   $.post(churchtoolsSuite.ajaxUrl, {
-		   action: 'cts_clear_logs',
-		   nonce: churchtoolsSuite.nonce
-	   }).done(function(resp){
-		   if (resp.success) {
-			   alert('<?php esc_html_e( 'Logs wurden gelöscht.', 'churchtools-suite' ); ?>');
-		   } else {
-			   alert((resp.data && resp.data.message) ? resp.data.message : 'Fehler beim Löschen der Logs.');
-		   }
-	   }).fail(function(){
-		   alert('Netzwerkfehler beim Löschen der Logs.');
-	   }).always(function(){
-		   $btn.prop('disabled', false).text('🗑️ <?php esc_html_e( 'Log löschen', 'churchtools-suite' ); ?>');
-	   });
-   });
-})(jQuery);
-/* ]]> */
-</script>

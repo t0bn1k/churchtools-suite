@@ -450,28 +450,5 @@ $shortcodes = [
 	
 </div>
 
-<style>
-.cts-tab {
-	cursor: pointer;
-	transition: all 0.2s;
-}
-
-.cts-tab:not(.active):hover {
-	background: rgba(0,0,0,0.03);
-}
-
-.cts-tab-content {
-	animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-	from { opacity: 0; transform: translateY(-10px); }
-	to { opacity: 1; transform: translateY(0); }
-}
-
-.cts-button.copied {
-	background: #00a32a !important;
-	border-color: #00a32a !important;
-	color: #fff !important;
-}
-<!-- Shortcode manager JS migrated to central admin JS (assets/js/churchtools-suite-admin.js) -->
+<!-- Tab animations & button styles migrated to assets/css/admin.css (v0.9.4.7) -->
+<!-- Shortcode manager JS migrated to assets/js/admin.js (v0.9.4.7) -->
