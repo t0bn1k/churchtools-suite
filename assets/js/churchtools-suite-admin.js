@@ -52,19 +52,41 @@
 		const panels = document.querySelectorAll('.cts-demo-panel');
 		if (!tabs.length || !panels.length) return;
 
+		// Tab click handler
 		tabs.forEach(function(tab) {
 			tab.addEventListener('click', function(e) {
 				e.preventDefault();
 				const targetTab = this.getAttribute('data-tab');
 				const targetId = 'demo-' + targetTab;
-				// Deactivate
+				// Deactivate all
 				tabs.forEach(function(t) { t.classList.remove('active'); });
 				panels.forEach(function(p) { p.classList.remove('active'); });
+				// Activate clicked tab
 				this.classList.add('active');
 				const targetPanel = document.getElementById(targetId);
 				if (targetPanel) targetPanel.classList.add('active');
 			});
 		});
+
+		// v0.9.4.8: Check URL parameter on page load
+		const urlParams = new URLSearchParams(window.location.search);
+		const typeParam = urlParams.get('type');
+		if (typeParam) {
+			// Find tab with matching data-tab attribute
+			const matchingTab = Array.from(tabs).find(function(tab) {
+				return tab.getAttribute('data-tab') === typeParam;
+			});
+			
+			if (matchingTab) {
+				// Deactivate all tabs/panels
+				tabs.forEach(function(t) { t.classList.remove('active'); });
+				panels.forEach(function(p) { p.classList.remove('active'); });
+				// Activate matching tab
+				matchingTab.classList.add('active');
+				const targetPanel = document.getElementById('demo-' + typeParam);
+				if (targetPanel) targetPanel.classList.add('active');
+			}
+		}
 	}
 
 	function initDemoCopyHtml() {
