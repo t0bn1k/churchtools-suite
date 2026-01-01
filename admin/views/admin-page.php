@@ -38,7 +38,7 @@ $advanced_mode = get_option( 'churchtools_suite_advanced_mode', 0 );
 			<span>🔄</span>
 			<?php esc_html_e( 'Synchronisation', 'churchtools-suite' ); ?>
 		</a>
-		<a href="https://plugin.aschaffenburg.feg.de" target="_blank" class="cts-tab" style="margin-left: auto;">
+		<a href="https://plugin.feg-aschaffenburg.de" target="_blank" class="cts-tab" style="margin-left: auto;">
 			<span>🌐</span>
 			<?php esc_html_e( 'Live Demos & Docs', 'churchtools-suite' ); ?>
 		</a>
