@@ -9,6 +9,9 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+// Load demo helpers
+require_once __DIR__ . '/demo-helpers.php';
 ?>
 
 <div class="cts-card">
@@ -17,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<h3><?php esc_html_e( 'Cover Views', 'churchtools-suite' ); ?></h3>
 	</div>
 	<div class="cts-card-body">
+		<?php cts_demo_embed_public_css(); ?>
 		
 		<!-- Cover Classic -->
 		<div class="cts-demo-item">
