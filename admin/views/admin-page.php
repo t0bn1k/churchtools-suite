@@ -38,7 +38,10 @@ $advanced_mode = get_option( 'churchtools_suite_advanced_mode', 0 );
 			<span>🔄</span>
 			<?php esc_html_e( 'Synchronisation', 'churchtools-suite' ); ?>
 		</a>
-		   <!-- Dokumentation Tab entfernt -->
+		<a href="https://plugin.aschaffenburg.feg.de" target="_blank" class="cts-tab" style="margin-left: auto;">
+			<span>🌐</span>
+			<?php esc_html_e( 'Live Demos & Docs', 'churchtools-suite' ); ?>
+		</a>
 		<?php if ( $advanced_mode ) : ?>
 		<a href="?page=churchtools-suite&tab=debug" class="cts-tab <?php echo $active_tab === 'debug' ? 'active' : ''; ?>">
 			<span>🔧</span>
