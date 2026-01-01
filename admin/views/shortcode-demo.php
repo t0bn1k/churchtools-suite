@@ -113,26 +113,31 @@ $demo_types = [
 	</div>
 
 	<div class="cts-tab-content">
+		<?php
+		// Embed public CSS inline for demo preview
+		require_once __DIR__ . '/demos/demo-helpers.php';
+		cts_demo_embed_public_css();
+		?>
 		
 		<?php if ( ! $selected_type ) : ?>
 			<!-- Overview Page -->
 			
 			<!-- Quick Stats -->
-			<div class="cts-grid cts-grid-3 cts-mb-30">
+			<div class="cts-grid cts-grid-3" style="margin-bottom: 30px;">
 				<div class="cts-card">
-					<div class="cts-card-body cts-text-center">
-						<div class="cts-stat-number cts-success">3/11</div>
+					<div class="cts-card-body" style="text-align: center;">
+						<div class="cts-stat-number" style="color: #10b981;">3/11</div>
 						<p class="cts-card-detail"><?php esc_html_e( 'Shortcode-Typen verfügbar', 'churchtools-suite' ); ?></p>
 					</div>
 				</div>
 				<div class="cts-card">
-					<div class="cts-card-body cts-text-center">
-						<div class="cts-stat-number cts-success">5<span class="cts-accent">/12</span></div>
+					<div class="cts-card-body" style="text-align: center;">
+						<div class="cts-stat-number" style="color: #10b981;">5<span style="color: #3b82f6;">/12</span></div>
 						<p class="cts-card-detail"><?php esc_html_e( 'View-Varianten fertig/geplant', 'churchtools-suite' ); ?></p>
 					</div>
 				</div>
 				<div class="cts-card">
-					<div class="cts-card-body cts-text-center">
+					<div class="cts-card-body" style="text-align: center;">
 						<div class="cts-stat-number" style="color: #667eea;">v0.6.1</div>
 						<p class="cts-card-detail"><?php esc_html_e( 'Aktuelle Version', 'churchtools-suite' ); ?></p>
 					</div>
@@ -140,16 +145,16 @@ $demo_types = [
 			</div>
 			
 			<!-- Status Legend -->
-			<div class="cts-card cts-mb-30">
+			<div class="cts-card" style="margin-bottom: 30px;">
 				<div class="cts-card-body">
-					<div class="cts-flex cts-flex-wrap cts-gap-24 cts-justify-center">
-						<div class="cts-flex" style="align-items:center; gap:8px;">
+					<div style="display: flex; gap: 24px; flex-wrap: wrap; justify-content: center;">
+						<div style="display: flex; align-items: center; gap: 8px;">
 							<span class="cts-status-badge cts-status-ready">✓ Verfügbar</span>
-							<span class="cts-muted-small">5 Views (List, Calendar, Grid)</span>
+							<span style="color: #646970; font-size: 13px;">5 Views (List, Calendar, Grid)</span>
 						</div>
-						<div class="cts-flex" style="align-items:center; gap:8px;">
+						<div style="display: flex; align-items: center; gap: 8px;">
 							<span class="cts-status-badge cts-status-planned">⏳ In Entwicklung</span>
-							<span class="cts-muted-small">7 Views + 8 neue Typen</span>
+							<span style="color: #646970; font-size: 13px;">7 Views + 8 neue Typen</span>
 						</div>
 					</div>
 				</div>
@@ -182,22 +187,22 @@ $demo_types = [
 			</div>
 
 			<!-- Quick Reference -->
-			<div class="cts-card cts-card--max900 cts-mt-40">
+			<div class="cts-card" style="max-width: 900px; margin: 40px auto 0;">
 				<div class="cts-card-header">
 					<span class="cts-card-icon">💡</span>
 					<h3><?php esc_html_e( 'Schnellstart', 'churchtools-suite' ); ?></h3>
 				</div>
 				<div class="cts-card-body">
 					<ol style="margin: 0; padding-left: 20px;">
-						<li class="cts-mb-12">
+						<li style="margin-bottom: 12px;">
 							<strong><?php esc_html_e( 'Typ auswählen', 'churchtools-suite' ); ?></strong> - 
 							<?php esc_html_e( 'Klicke auf eine der Karten oben', 'churchtools-suite' ); ?>
 						</li>
-						<li class="cts-mb-12">
+						<li style="margin-bottom: 12px;">
 							<strong><?php esc_html_e( 'Live-Demo ansehen', 'churchtools-suite' ); ?></strong> - 
 							<?php esc_html_e( 'Alle Varianten werden mit echten Daten gerendert', 'churchtools-suite' ); ?>
 						</li>
-						<li class="cts-mb-12">
+						<li style="margin-bottom: 12px;">
 							<strong><?php esc_html_e( 'Shortcode kopieren', 'churchtools-suite' ); ?></strong> - 
 							<?php esc_html_e( 'Verwende den Code in deinen Seiten oder Beiträgen', 'churchtools-suite' ); ?>
 						</li>
@@ -208,24 +213,40 @@ $demo_types = [
 		<?php else : ?>
 			<!-- Detail Page for specific type -->
 			
-			<!-- Quick Reference -->
-			<div class="cts-card cts-card--max900 cts-mb-30">
-				<div class="cts-card-header">
-					<span class="cts-card-icon">🔖</span>
-					<h3><?php esc_html_e( 'Quick Reference', 'churchtools-suite' ); ?></h3>
-				</div>
-				<div class="cts-card-body">
-					<div class="cts-card-muted" style="padding:16px; border:1px solid #e5e7eb;">
-						<h4 style="margin-top: 0;"><?php esc_html_e( 'Häufigste Shortcodes:', 'churchtools-suite' ); ?></h4>
-						<ul style="margin: 0; padding-left: 20px; list-style: none;">
-							<li style="margin-bottom: 8px;"><code class="cts-code">[cts_list view="classic" limit="10" show_services="true"]</code></li>
-							<li style="margin-bottom: 8px;"><code class="cts-code">[cts_calendar view="monthly-modern" limit="20"]</code></li>
-							<li style="margin-bottom: 8px;"><code class="cts-code">[cts_grid view="simple" columns="3" limit="9"]</code></li>
-							<li style="margin-bottom: 8px;"><code class="cts-code">[cts_countdown view="type-1"]</code></li>
-						</ul>
-					</div>
-				</div>
+			<!-- Back Button -->
+			<div style="margin-bottom: 20px;">
+				<a href="?page=churchtools-suite-demo" class="button">
+					<span class="dashicons dashicons-arrow-left-alt2" style="margin-top: 3px;"></span>
+					<?php esc_html_e( 'Zurück zur Übersicht', 'churchtools-suite' ); ?>
+				</a>
 			</div>
+
+			<!-- Load specific demo content -->
+			<?php
+			$demo_file = CHURCHTOOLS_SUITE_PATH . "admin/views/demos/demo-{$selected_type}.php";
+			if ( file_exists( $demo_file ) ) {
+				include $demo_file;
+			} else {
+				echo '<div class="cts-card"><div class="cts-card-body">';
+				echo '<p>' . esc_html__( 'Demo für diesen Typ wird noch erstellt...', 'churchtools-suite' ) . '</p>';
+				echo '</div></div>';
+			}
+			?>
+
+		<?php endif; ?>
+
+	</div>
+
+</div>
+
+<style>
+/* Demo Type Grid */
+.cts-demo-type-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 20px;
+	margin-bottom: 40px;
+}
 
 .cts-demo-type-card {
 	display: flex;
@@ -383,7 +404,4 @@ $demo_types = [
 		word-break: break-all;
 	}
 }
-.cts-justify-center { justify-content: center; }
-.cts-accent { color: #3b82f6; }
-.cts-accent-2 { color: #667eea; }
 </style>
