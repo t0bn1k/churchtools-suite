@@ -1,26 +1,92 @@
 <?php
 /**
-</div>
+ * Shortcode Demo Page
+ *
+ * @package ChurchTools_Suite
+ * @since   0.5.9.21
+ */
 
-<!-- Demo behaviour migrated to central admin JS (assets/js/churchtools-suite-admin.js) -->
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+// Read demo HTML content
+$demo_file = CHURCHTOOLS_SUITE_PATH . 'shortcode-demo.html';
+$demo_content = file_exists( $demo_file ) ? file_get_contents( $demo_file ) : '';
+
+// Read reference markdown
+$reference_file = CHURCHTOOLS_SUITE_PATH . 'SHORTCODE-REFERENCE.md';
+$reference_content = file_exists( $reference_file ) ? file_get_contents( $reference_file ) : '';
+
+// Parse markdown headers from reference
+$shortcuts = [];
+if ( $reference_content ) {
+	preg_match_all( '/###\s+\d+\.\s+(.+?)\s+\((\d+)\s+Varianten?\)/m', $reference_content, $matches, PREG_SET_ORDER );
+	foreach ( $matches as $match ) {
+		$shortcuts[] = [
+			'name' => $match[1],
+			'count' => $match[2]
+		];
+	}
+}
+?>
+
+<div class="wrap cts-wrap">
+	
+	<div class="cts-header">
+		<h1>
+			<span>🎯</span>
+			<?php esc_html_e( 'Shortcode Demo & Test', 'churchtools-suite' ); ?>
+		</h1>
+		<p class="cts-subtitle"><?php esc_html_e( 'Vollständige Übersicht aller verfügbaren Shortcodes zum Testen und Optimieren', 'churchtools-suite' ); ?></p>
+	</div>
+
+	<div class="cts-tab-content">
+		<?php
+		// Embed public CSS inline for demo preview
+		require_once __DIR__ . '/demos/demo-helpers.php';
+		cts_demo_embed_public_css();
+		?>
+		
+		<!-- Quick Stats -->
+		<div class="cts-grid cts-grid-3" style="margin-bottom: 30px;">
+			<div class="cts-card">
+				<div class="cts-card-body" style="text-align: center;">
+					<div class="cts-stat-number">13</div>
+					<p class="cts-card-detail"><?php esc_html_e( 'Shortcode-Typen', 'churchtools-suite' ); ?></p>
+				</div>
+			</div>
+			<div class="cts-card">
+				<div class="cts-card-body" style="text-align: center;">
+					<div class="cts-stat-number">70+</div>
+					<p class="cts-card-detail"><?php esc_html_e( 'View-Varianten', 'churchtools-suite' ); ?></p>
+				</div>
+			</div>
+			<div class="cts-card">
+				<div class="cts-card-body" style="text-align: center;">
+					<div class="cts-stat-number">50+</div>
+					<p class="cts-card-detail"><?php esc_html_e( 'Parameter-Kombinationen', 'churchtools-suite' ); ?></p>
+				</div>
+			</div>
+		</div>
 
 		<!-- Instructions -->
-		<div class="cts-card cts-card--max900 cts-mb-30">
+		<div class="cts-card" style="max-width: 900px; margin-bottom: 30px;">
 			<div class="cts-card-header">
 				<span class="cts-card-icon">📋</span>
 				<h3><?php esc_html_e( 'Anleitung', 'churchtools-suite' ); ?></h3>
 			</div>
 			<div class="cts-card-body">
-				<ol class="cts-list-reset">
-					<li class="cts-mb-12">
+				<ol style="margin: 0; padding-left: 20px;">
+					<li style="margin-bottom: 12px;">
 						<strong><?php esc_html_e( 'Demo-Seite erstellen:', 'churchtools-suite' ); ?></strong><br>
 						<?php esc_html_e( 'Neue WordPress-Seite anlegen → Code-Editor öffnen → Demo-HTML einfügen (Button unten)', 'churchtools-suite' ); ?>
 					</li>
-					<li class="cts-mb-12">
+					<li style="margin-bottom: 12px;">
 						<strong><?php esc_html_e( 'Systematisch testen:', 'churchtools-suite' ); ?></strong><br>
 						<?php esc_html_e( 'Alle Views durchgehen und auf Layout, Funktionalität und Performance prüfen', 'churchtools-suite' ); ?>
 					</li>
-					<li class="cts-mb-12">
+					<li style="margin-bottom: 12px;">
 						<strong><?php esc_html_e( 'Probleme dokumentieren:', 'churchtools-suite' ); ?></strong><br>
 						<?php esc_html_e( 'Im Notizen-Bereich der Demo-Seite festhalten, was optimiert werden muss', 'churchtools-suite' ); ?>
 					</li>
@@ -29,20 +95,20 @@
 		</div>
 
 		<!-- Shortcode Overview -->
-		<div class="cts-card cts-maxw-900 cts-mb-30">
+		<div class="cts-card" style="max-width: 900px; margin-bottom: 30px;">
 			<div class="cts-card-header">
 				<span class="cts-card-icon">📚</span>
 				<h3><?php esc_html_e( 'Verfügbare Shortcode-Typen', 'churchtools-suite' ); ?></h3>
 			</div>
 			<div class="cts-card-body">
 				<?php if ( ! empty( $shortcuts ) ) : ?>
-					<div class="cts-grid-auto">
+					<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
 						<?php foreach ( $shortcuts as $shortcut ) : ?>
-							<div class="cts-card-muted cts-card-muted-accent">
-								<strong class="cts-text-dark cts-mb-4">
+							<div style="padding: 12px; background: #f9fafb; border-radius: 6px; border-left: 3px solid #667eea;">
+								<strong style="color: #1d2327; display: block; margin-bottom: 4px;">
 									<?php echo esc_html( $shortcut['name'] ); ?>
 								</strong>
-								<span class="cts-muted-small">
+								<span style="color: #646970; font-size: 13px;">
 									<?php echo esc_html( $shortcut['count'] ); ?> <?php esc_html_e( 'Varianten', 'churchtools-suite' ); ?>
 								</span>
 							</div>
@@ -55,14 +121,14 @@
 		</div>
 
 		<!-- Live Demo Tabs -->
-		<div class="cts-card cts-mb-30">
+		<div class="cts-card" style="margin-bottom: 30px;">
 			<div class="cts-card-header">
 				<span class="cts-card-icon">🎬</span>
 				<h3><?php esc_html_e( 'Live Demo', 'churchtools-suite' ); ?></h3>
 			</div>
-			<div class="cts-card-body cts-p-0">
+			<div class="cts-card-body" style="padding: 0;">
 				<!-- Tab Navigation -->
-				<div class="cts-flex cts-flex-wrap cts-gap-4 cts-demo-tab-nav">
+				<div style="display: flex; flex-wrap: wrap; gap: 4px; padding: 16px 16px 0; border-bottom: 1px solid #e5e7eb; background: #f9fafb;">
 					<button type="button" class="cts-demo-tab active" data-tab="calendar">📅 Calendar</button>
 					<button type="button" class="cts-demo-tab" data-tab="list">📋 List</button>
 					<button type="button" class="cts-demo-tab" data-tab="grid">▦ Grid</button>
@@ -285,54 +351,63 @@
 		</div>
 		
 		<!-- Demo HTML Export -->
-				<div class="cts-card cts-card--max900 cts-mb-30">
+		<div class="cts-card" style="max-width: 900px; margin-bottom: 30px;">
 			<div class="cts-card-header">
 				<span class="cts-card-icon">💾</span>
 				<h3><?php esc_html_e( 'Demo-HTML für WordPress', 'churchtools-suite' ); ?></h3>
 			</div>
-				<div class="cts-card-body">
-					<p class="cts-mt-0">
+			<div class="cts-card-body">
+				<p style="margin-top: 0;">
 					<?php esc_html_e( 'Kopiere den gesamten HTML-Code und füge ihn in eine neue WordPress-Seite ein (Code-Editor-Modus).', 'churchtools-suite' ); ?>
 				</p>
-					<div class="cts-relative">
-						<textarea id="cts-demo-html" readonly class="cts-preview-textarea"><?php echo esc_textarea( $demo_content ); ?></textarea>
-						<button type="button" id="cts-copy-demo-html" class="button button-primary cts-mt-12">
-							<span class="dashicons dashicons-clipboard"></span>
-							<?php esc_html_e( 'HTML kopieren', 'churchtools-suite' ); ?>
-						</button>
-						<span id="cts-copy-feedback" class="cts-hidden cts-ml-8 cts-success">
-							✓ <?php esc_html_e( 'In Zwischenablage kopiert!', 'churchtools-suite' ); ?>
-						</span>
-					</div>
+				
+				<div style="position: relative;">
+					<textarea id="cts-demo-html" readonly style="width: 100%; height: 300px; font-family: monospace; font-size: 12px; padding: 12px; border: 1px solid #8c8f94; border-radius: 4px; background: #f9fafb;"><?php echo esc_textarea( $demo_content ); ?></textarea>
+					<button type="button" id="cts-copy-demo-html" class="button button-primary" style="margin-top: 12px;">
+						<span class="dashicons dashicons-clipboard" style="margin-top: 3px;"></span>
+						<?php esc_html_e( 'HTML kopieren', 'churchtools-suite' ); ?>
+					</button>
+					<span id="cts-copy-feedback" style="display: none; margin-left: 12px; color: #00a32a; font-weight: 600;">
+						✓ <?php esc_html_e( 'In Zwischenablage kopiert!', 'churchtools-suite' ); ?>
+					</span>
+				</div>
 			</div>
 		</div>
 
 		<!-- Quick Reference -->
-		<div class="cts-card cts-maxw-900 cts-mb-30">
+		<div class="cts-card" style="max-width: 900px; margin-bottom: 30px;">
 			<div class="cts-card-header">
 				<span class="cts-card-icon">🔖</span>
 				<h3><?php esc_html_e( 'Quick Reference', 'churchtools-suite' ); ?></h3>
 			</div>
 			<div class="cts-card-body">
-				<div class="cts-card-muted">
-					<h4 class="cts-mt-0"><?php esc_html_e( 'Häufigste Shortcodes:', 'churchtools-suite' ); ?></h4>
-					<ul class="cts-list-reset">
-						<li class="cts-mb-8">
-							<code class="cts-code">[cts_list view="classic" limit="10" show_services="true"]</code>
+				<div style="background: #f9fafb; padding: 16px; border-radius: 6px; border: 1px solid #e5e7eb;">
+					<h4 style="margin-top: 0;"><?php esc_html_e( 'Häufigste Shortcodes:', 'churchtools-suite' ); ?></h4>
+					<ul style="margin: 0; padding-left: 20px; list-style: none;">
+						<li style="margin-bottom: 8px;">
+							<code style="background: #1e293b; color: #10b981; padding: 4px 8px; border-radius: 3px; font-size: 13px;">
+								[cts_list view="classic" limit="10" show_services="true"]
+							</code>
 						</li>
-						<li class="cts-mb-8">
-							<code class="cts-code">[cts_calendar view="monthly-modern" limit="20"]</code>
+						<li style="margin-bottom: 8px;">
+							<code style="background: #1e293b; color: #10b981; padding: 4px 8px; border-radius: 3px; font-size: 13px;">
+								[cts_calendar view="monthly-modern" limit="20"]
+							</code>
 						</li>
-						<li class="cts-mb-8">
-							<code class="cts-code">[cts_grid view="simple" columns="3" limit="9"]</code>
+						<li style="margin-bottom: 8px;">
+							<code style="background: #1e293b; color: #10b981; padding: 4px 8px; border-radius: 3px; font-size: 13px;">
+								[cts_grid view="simple" columns="3" limit="9"]
+							</code>
 						</li>
-						<li class="cts-mb-8">
-							<code class="cts-code">[cts_countdown view="type-1"]</code>
+						<li style="margin-bottom: 8px;">
+							<code style="background: #1e293b; color: #10b981; padding: 4px 8px; border-radius: 3px; font-size: 13px;">
+								[cts_countdown view="type-1"]
+							</code>
 						</li>
 					</ul>
 					
-					<h4 class="cts-mt-20 cts-mb-2"><?php esc_html_e( 'Gemeinsame Parameter:', 'churchtools-suite' ); ?></h4>
-					<ul class="cts-list-reset">
+					<h4 style="margin: 20px 0 8px;"><?php esc_html_e( 'Gemeinsame Parameter:', 'churchtools-suite' ); ?></h4>
+					<ul style="margin: 0; padding-left: 20px;">
 						<li><code>calendar="1,2,3"</code> - <?php esc_html_e( 'Kalender-IDs filtern', 'churchtools-suite' ); ?></li>
 						<li><code>limit="10"</code> - <?php esc_html_e( 'Max. Anzahl Events', 'churchtools-suite' ); ?></li>
 						<li><code>from="today"</code> - <?php esc_html_e( 'Start-Datum', 'churchtools-suite' ); ?></li>
@@ -343,7 +418,7 @@
 		</div>
 
 		<!-- Documentation Links -->
-		<div class="cts-card cts-maxw-900 cts-mb-30">
+		<div class="cts-card" style="max-width: 900px; margin-bottom: 30px;">
 			<div class="cts-card-header">
 				<span class="cts-card-icon">📖</span>
 				<h3><?php esc_html_e( 'Dokumentation', 'churchtools-suite' ); ?></h3>
@@ -351,19 +426,19 @@
 			<div class="cts-card-body">
 				<div style="display: grid; gap: 12px;">
 					<a href="<?php echo esc_url( CHURCHTOOLS_SUITE_URL . 'SHORTCODE-DEMO.md' ); ?>" class="button" target="_blank">
-						<span class="dashicons dashicons-media-document"></span>
+						<span class="dashicons dashicons-media-document" style="margin-top: 3px;"></span>
 						<?php esc_html_e( 'SHORTCODE-DEMO.md', 'churchtools-suite' ); ?>
 					</a>
 					<a href="<?php echo esc_url( CHURCHTOOLS_SUITE_URL . 'SHORTCODE-REFERENCE.md' ); ?>" class="button" target="_blank">
-						<span class="dashicons dashicons-book"></span>
+						<span class="dashicons dashicons-book" style="margin-top: 3px;"></span>
 						<?php esc_html_e( 'SHORTCODE-REFERENCE.md', 'churchtools-suite' ); ?>
 					</a>
 					<a href="<?php echo esc_url( CHURCHTOOLS_SUITE_URL . 'TEST-DOCUMENTATION.md' ); ?>" class="button" target="_blank">
-						<span class="dashicons dashicons-clipboard"></span>
+						<span class="dashicons dashicons-clipboard" style="margin-top: 3px;"></span>
 						<?php esc_html_e( 'TEST-DOCUMENTATION.md', 'churchtools-suite' ); ?>
 					</a>
 					<a href="<?php echo esc_url( CHURCHTOOLS_SUITE_URL . 'SHORTCODE-GUIDE.md' ); ?>" class="button" target="_blank">
-						<span class="dashicons dashicons-lightbulb"></span>
+						<span class="dashicons dashicons-lightbulb" style="margin-top: 3px;"></span>
 						<?php esc_html_e( 'SHORTCODE-GUIDE.md', 'churchtools-suite' ); ?>
 					</a>
 				</div>
@@ -379,7 +454,7 @@
 			<div class="cts-card-body">
 				<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
 					<div>
-						<h4 class="cts-mt-0 cts-accent"><?php esc_html_e( 'Funktionalität', 'churchtools-suite' ); ?></h4>
+						<h4 style="margin-top: 0; color: #667eea;"><?php esc_html_e( 'Funktionalität', 'churchtools-suite' ); ?></h4>
 						<ul style="list-style: none; padding: 0;">
 							<li>☐ <?php esc_html_e( 'Alle Shortcodes rendern', 'churchtools-suite' ); ?></li>
 							<li>☐ <?php esc_html_e( 'Events werden angezeigt', 'churchtools-suite' ); ?></li>
@@ -389,7 +464,7 @@
 						</ul>
 					</div>
 					<div>
-							<h4 class="cts-mt-0 cts-accent"><?php esc_html_e( 'Layout', 'churchtools-suite' ); ?></h4>
+						<h4 style="margin-top: 0; color: #667eea;"><?php esc_html_e( 'Layout', 'churchtools-suite' ); ?></h4>
 						<ul style="list-style: none; padding: 0;">
 							<li>☐ <?php esc_html_e( 'Responsive Design', 'churchtools-suite' ); ?></li>
 							<li>☐ <?php esc_html_e( 'Keine Layout-Breaks', 'churchtools-suite' ); ?></li>
@@ -399,7 +474,7 @@
 						</ul>
 					</div>
 					<div>
-							<h4 class="cts-mt-0 cts-accent"><?php esc_html_e( 'Performance', 'churchtools-suite' ); ?></h4>
+						<h4 style="margin-top: 0; color: #667eea;"><?php esc_html_e( 'Performance', 'churchtools-suite' ); ?></h4>
 						<ul style="list-style: none; padding: 0;">
 							<li>☐ <?php esc_html_e( 'Ladezeiten < 2s', 'churchtools-suite' ); ?></li>
 							<li>☐ <?php esc_html_e( 'Keine JS-Fehler', 'churchtools-suite' ); ?></li>
@@ -556,14 +631,3 @@
 </style>
 
 <!-- Demo behaviour migrated to central admin JS (assets/js/churchtools-suite-admin.js) -->
- 
-<style>
-/* Small utilities used by this view (kept local until consolidated) */
-.cts-p-0 { padding: 0 !important; }
-.cts-mt-0 { margin-top: 0 !important; }
-.cts-mt-20 { margin-top: 20px !important; }
-.cts-mb-2 { margin-bottom: 2px !important; }
-.cts-mt-12 { margin-top: 12px !important; }
-.cts-relative { position: relative; }
-.cts-accent { color: #667eea; }
-</style>

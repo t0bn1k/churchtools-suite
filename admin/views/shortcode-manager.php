@@ -430,9 +430,12 @@ $shortcodes = [
 		<div class="cts-card" style="max-width:900px; margin-top:20px;">
 			<div class="cts-card-header"><span class="cts-card-icon">💾</span><h3><?php esc_html_e( 'Demo-HTML für WordPress', 'churchtools-suite' ); ?></h3></div>
 			<div class="cts-card-body">
+				<?php
+				// Embed public CSS inline for demo preview
+				require_once __DIR__ . '/demos/demo-helpers.php';
+				cts_demo_embed_public_css();
+				?>
 				<p><?php esc_html_e( 'Kopiere den gesamten HTML-Code und füge ihn in eine neue WordPress-Seite ein (Code-Editor-Modus).', 'churchtools-suite' ); ?></p>
-				<!-- Ensure frontend/public CSS is available inside the demo preview area -->
-				<link rel="stylesheet" href="<?php echo esc_url( CHURCHTOOLS_SUITE_URL . 'assets/css/churchtools-suite-public.css' ); ?>">
 				<textarea id="cts-demo-html" readonly style="width:100%; height:200px; font-family:monospace; font-size:12px; padding:12px; border:1px solid #8c8f94; border-radius:4px; background:#f9fafb;"><?php echo esc_textarea( file_exists( CHURCHTOOLS_SUITE_PATH . 'shortcode-demo.html' ) ? file_get_contents( CHURCHTOOLS_SUITE_PATH . 'shortcode-demo.html' ) : '' ); ?></textarea>
 				<button type="button" id="cts-copy-demo-html" class="cts-button cts-button-primary" style="margin-top:12px;">📋 <?php esc_html_e( 'HTML kopieren', 'churchtools-suite' ); ?></button>
 				<span id="cts-copy-feedback" style="display:none; margin-left:12px; color:#00a32a; font-weight:600;">✓ <?php esc_html_e( 'In Zwischenablage kopiert!', 'churchtools-suite' ); ?></span>
