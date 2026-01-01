@@ -69,15 +69,6 @@ $show_services = isset( $args['show_services'] ) ? ChurchTools_Suite_Shortcodes:
 							<?php echo esc_html( wp_trim_words( $event['description'], 20 ) ); ?>
 						</div>
 					<?php endif; ?>
-									echo esc_html( $event['address_street'] ?? '' );
-								}
-
-								$info_parts = array_filter( [ $event['address_street'] ?? '', $event['address_zip'] ?? '', $event['address_city'] ?? '' ] );
-								if ( ! empty( $info_parts ) ) {
-									$info_text = implode( ', ', $info_parts );
-									?> <span class="cts-info-popup" title="<?php echo esc_attr( $info_text ); ?>"> ⓘ</span><?php
-								}
-								?>
 					<!-- Meta Info -->
 					<div class="cts-event-meta">
 						
@@ -115,30 +106,6 @@ $show_services = isset( $args['show_services'] ) ? ChurchTools_Suite_Shortcodes:
 								}
 								?>
 							</span>
-						<?php endif; ?>
-						
-					</div>
-					
-				</div>
-				
-			</div>
-			
-		<?php endforeach; ?>
-		
-	<?php endif; ?>
-	
-</div>
-</div>
-
-<?php foreach ( array_slice( $event['services'], 0, 3 ) as $service ) : ?>
-									<span class="cts-service-badge">
-										<?php echo esc_html( $service['service_name'] ); ?>
-									</span>
-								<?php endforeach; ?>
-								<?php if ( count( $event['services'] ) > 3 ) : ?>
-									<span class="cts-service-more">+<?php echo count( $event['services'] ) - 3; ?></span>
-								<?php endif; ?>
-							</div>
 						<?php endif; ?>
 						
 					</div>

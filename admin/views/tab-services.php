@@ -67,10 +67,10 @@ $last_services_sync = get_option('churchtools_suite_services_last_sync', null);
 		</div>
 	</div>
 	
-	<div id="cts-sync-service-groups-result" class="cts-mt-15 cts-hidden"></div>
+	<div id="cts-sync-service-groups-result" style="margin-top: 15px; display: none;"></div>
 	
 	<!-- SCHRITT 2: Service Group Auswahl -->
-	<div class="cts-card cts-mt-20">
+	<div class="cts-card" style="margin-top: 20px;">
 		<div class="cts-card-header">
 			<span class="cts-card-icon">📂</span>
 			<h3><?php esc_html_e('Schritt 2: Service-Gruppen auswählen', 'churchtools-suite'); ?></h3>
@@ -96,7 +96,7 @@ $last_services_sync = get_option('churchtools_suite_services_last_sync', null);
 				</p>
 				
 				<!-- Bulk-Actions für Service-Gruppen -->
-				<div class="cts-mt-15 cts-flex cts-gap-10">
+				<div style="margin: 15px 0; display: flex; gap: 10px;">
 					<button type="button" id="cts-select-all-groups-btn" class="button">
 						✅ <?php esc_html_e('Alle auswählen', 'churchtools-suite'); ?>
 					</button>
@@ -108,7 +108,7 @@ $last_services_sync = get_option('churchtools_suite_services_last_sync', null);
 				<form method="post" id="cts-service-group-selection-form">
 					<?php wp_nonce_field('cts_service_group_selection', 'cts_service_group_selection_nonce'); ?>
 					
-					<table class="widefat cts-mt-15">
+					<table class="widefat" style="margin-top: 15px;">
 						<thead>
 							<tr>
 								<th style="width: 40px;">
@@ -145,7 +145,7 @@ $last_services_sync = get_option('churchtools_suite_services_last_sync', null);
 						</tbody>
 					</table>
 					
-					<div class="cts-mt-20">
+					<div style="margin-top: 20px;">
 						<button type="submit" class="button button-primary">
 							<?php esc_html_e('Auswahl speichern', 'churchtools-suite'); ?>
 						</button>
@@ -157,10 +157,10 @@ $last_services_sync = get_option('churchtools_suite_services_last_sync', null);
 		</div>
 	</div>
 	
-	<div id="cts-service-group-selection-result" class="cts-mt-15 cts-hidden"></div>
+	<div id="cts-service-group-selection-result" style="margin-top: 15px; display: none;"></div>
 	
 	<!-- SCHRITT 3: Services synchronisieren & auswählen -->
-	<div class="cts-card cts-mt-20">
+	<div class="cts-card" style="margin-top: 20px;">
 		<div class="cts-card-header">
 			<span class="cts-card-icon">🔄</span>
 			<h3><?php esc_html_e('Schritt 3: Services synchronisieren', 'churchtools-suite'); ?></h3>
@@ -189,10 +189,10 @@ $last_services_sync = get_option('churchtools_suite_services_last_sync', null);
 		</div>
 	</div>
 	
-	<div id="cts-sync-services-result" class="cts-mt-15 cts-hidden"></div>
+	<div id="cts-sync-services-result" style="margin-top: 15px; display: none;"></div>
 	
 	<!-- Service Selection -->
-	<div class="cts-card cts-mt-20">
+	<div class="cts-card" style="margin-top: 20px;">
 		<div class="cts-card-header">
 			<span class="cts-card-icon">✅</span>
 			<h3><?php esc_html_e('Service-Auswahl für Event-Import', 'churchtools-suite'); ?></h3>
@@ -218,7 +218,7 @@ $last_services_sync = get_option('churchtools_suite_services_last_sync', null);
 				</p>
 				
 				<!-- Bulk-Actions für Services -->
-				<div class="cts-mt-15 cts-flex cts-gap-10">
+				<div style="margin: 15px 0; display: flex; gap: 10px;">
 					<button type="button" id="cts-select-all-services-btn" class="button">
 						✅ <?php esc_html_e('Alle auswählen', 'churchtools-suite'); ?>
 					</button>
@@ -230,7 +230,7 @@ $last_services_sync = get_option('churchtools_suite_services_last_sync', null);
 				<form method="post" id="cts-service-selection-form">
 					<?php wp_nonce_field('cts_service_selection', 'cts_service_selection_nonce'); ?>
 					
-					<table class="widefat cts-mt-15">
+					<table class="widefat" style="margin-top: 15px;">
 						<thead>
 							<tr>
 								<th style="width: 40px;">
@@ -278,7 +278,7 @@ $last_services_sync = get_option('churchtools_suite_services_last_sync', null);
 						</tbody>
 					</table>
 					
-					<div class="cts-mt-20">
+					<div style="margin-top: 20px;">
 						<button type="submit" class="button button-primary">
 							<?php esc_html_e('Auswahl speichern', 'churchtools-suite'); ?>
 						</button>
@@ -290,6 +290,6 @@ $last_services_sync = get_option('churchtools_suite_services_last_sync', null);
 		</div>
 	</div>
 	
-	<div id="cts-service-selection-result" class="cts-mt-15 cts-hidden"></div>
+	<div id="cts-service-selection-result" style="margin-top: 15px; display: none;"></div>
 	
 </div>

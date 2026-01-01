@@ -28,7 +28,7 @@ $block_logs = array_reverse( $block_logs );
 	</div>
 	
 	<!-- Block Status -->
-	<div class="cts-card cts-maxw-1200 cts-mb-20">
+	<div class="cts-card" style="max-width: 1200px; margin-bottom: 20px;">
 		<div class="cts-card-header">
 			<span class="cts-card-icon">📊</span>
 			<h3>Block Registration Status</h3>
@@ -38,9 +38,9 @@ $block_logs = array_reverse( $block_logs );
 				<table class="cts-debug-table">
 					<thead>
 						<tr>
-							<th class="cts-w-30">Block</th>
-							<th class="cts-w-20">Status</th>
-							<th class="cts-w-50">Details</th>
+							<th style="width: 30%;">Block</th>
+							<th style="width: 20%;">Status</th>
+							<th style="width: 50%;">Details</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -49,9 +49,9 @@ $block_logs = array_reverse( $block_logs );
 								<td><code><?php echo esc_html( $block_id ); ?></code></td>
 								<td>
 									<?php if ( $status['registered'] ) : ?>
-										<span class="cts-status-success cts-font-600">✅ Registriert</span>
+										<span style="color: #00a32a; font-weight: 600;">✅ Registriert</span>
 									<?php else : ?>
-										<span class="cts-status-error cts-font-600">❌ Fehler</span>
+										<span style="color: #d63638; font-weight: 600;">❌ Fehler</span>
 									<?php endif; ?>
 								</td>
 								<td>
@@ -67,49 +67,55 @@ $block_logs = array_reverse( $block_logs );
 					</tbody>
 				</table>
 			<?php else : ?>
-				<p class="cts-muted cts-italic">Keine Block-Status-Daten verfügbar. Bitte Seite neu laden.</p>
+				<p style="color: #999; font-style: italic;">Keine Block-Status-Daten verfügbar. Bitte Seite neu laden.</p>
 			<?php endif; ?>
 		</div>
 	</div>
 	
 	<!-- Shortcode Parameter Test -->
-	<div class="cts-card cts-maxw-1200 cts-mb-20">
+	<div class="cts-card" style="max-width: 1200px; margin-bottom: 20px;">
 		<div class="cts-card-header">
 			<span class="cts-card-icon">🧪</span>
 			<h3>Shortcode Parameter Test</h3>
 		</div>
 		<div class="cts-card-body">
-			<p class="cts-mb-15 cts-muted">
+			<p style="margin-bottom: 15px; color: #646970;">
 				Teste die boolean-Parameter direkt:
 			</p>
-
-			<div class="cts-block-sample cts-mb-20">
-				<h4 class="cts-mb-15">Test mit allen Parametern TRUE:</h4>
-				<code class="cts-code cts-display-block cts-mb-10">[cts_list view="classic" limit="3" show_services="true" show_description="true" show_location="true"]</code>
-				<div class="cts-block-inner cts-border-primary">
+			
+			<div style="background: #f9fafb; padding: 20px; border-radius: 4px; border: 1px solid #e5e7eb; margin-bottom: 20px;">
+				<h4 style="margin: 0 0 15px 0;">Test mit allen Parametern TRUE:</h4>
+				<code style="background: #1e1e1e; color: #10b981; padding: 10px; display: block; border-radius: 4px; margin-bottom: 10px;">
+					[cts_list view="classic" limit="3" show_services="true" show_description="true" show_location="true"]
+				</code>
+				<div style="border: 2px solid #667eea; border-radius: 4px; padding: 15px; background: #fff;">
 					<?php echo do_shortcode('[cts_list view="classic" limit="3" show_services="true" show_description="true" show_location="true"]'); ?>
 				</div>
 			</div>
-
-			<div class="cts-block-sample-error cts-mb-20">
-				<h4 class="cts-mb-15">Test mit allen Parametern FALSE:</h4>
-				<code class="cts-code cts-display-block cts-mb-10">[cts_list view="classic" limit="3" show_services="false" show_description="false" show_location="false"]</code>
-				<div class="cts-block-inner cts-border-error">
+			
+			<div style="background: #fff5f5; padding: 20px; border-radius: 4px; border: 1px solid #fecaca; margin-bottom: 20px;">
+				<h4 style="margin: 0 0 15px 0;">Test mit allen Parametern FALSE:</h4>
+				<code style="background: #1e1e1e; color: #f87171; padding: 10px; display: block; border-radius: 4px; margin-bottom: 10px;">
+					[cts_list view="classic" limit="3" show_services="false" show_description="false" show_location="false"]
+				</code>
+				<div style="border: 2px solid #dc2626; border-radius: 4px; padding: 15px; background: #fff;">
 					<?php echo do_shortcode('[cts_list view="classic" limit="3" show_services="false" show_description="false" show_location="false"]'); ?>
 				</div>
 			</div>
-
-			<div class="cts-block-sample-warn cts-mb-0">
-				<h4 class="cts-mb-15">Test OHNE Parameter (soll Defaults TRUE verwenden):</h4>
-				<code class="cts-code cts-display-block cts-mb-10">[cts_list view="classic" limit="3"]</code>
-				<div class="cts-block-inner cts-border-warn">
+			
+			<div style="background: #fffbeb; padding: 20px; border-radius: 4px; border: 1px solid #fde68a;">
+				<h4 style="margin: 0 0 15px 0;">Test OHNE Parameter (soll Defaults TRUE verwenden):</h4>
+				<code style="background: #1e1e1e; color: #fbbf24; padding: 10px; display: block; border-radius: 4px; margin-bottom: 10px;">
+					[cts_list view="classic" limit="3"]
+				</code>
+				<div style="border: 2px solid #f59e0b; border-radius: 4px; padding: 15px; background: #fff;">
 					<?php echo do_shortcode('[cts_list view="classic" limit="3"]'); ?>
 				</div>
 			</div>
-
-			<div class="cts-block-info cts-mt-20">
+			
+			<div style="background: #f0f9ff; padding: 15px; border-radius: 4px; border-left: 4px solid #2563eb; margin-top: 20px;">
 				<strong>💡 Erwartetes Verhalten:</strong>
-				<ul class="cts-list-reset cts-ml-20 cts-line-height-18">
+				<ul style="margin: 10px 0 0 20px; line-height: 1.8;">
 					<li><strong>TRUE</strong>: Services, Beschreibung und Ort werden angezeigt</li>
 					<li><strong>FALSE</strong>: Services, Beschreibung und Ort werden ausgeblendet</li>
 					<li><strong>OHNE</strong>: Wie TRUE (Default-Verhalten)</li>
@@ -119,7 +125,7 @@ $block_logs = array_reverse( $block_logs );
 	</div>
 	
 	<!-- Live Debug Log -->
-	<div class="cts-card cts-maxw-1200">
+	<div class="cts-card" style="max-width: 1200px;">
 		<div class="cts-card-header">
 			<span class="cts-card-icon">📝</span>
 			<h3>Live Debug Log</h3>
@@ -129,11 +135,22 @@ $block_logs = array_reverse( $block_logs );
 				<button type="button" class="cts-button cts-button-secondary" id="cts-reload-block-logs">
 					<span>🔄</span> Log neu laden
 				</button>
-				<button type="button" class="cts-button cts-button-secondary cts-ml-10" id="cts-clear-block-logs">
+				<button type="button" class="cts-button cts-button-secondary" id="cts-clear-block-logs" style="margin-left: 10px;">
 					<span>🗑️</span> Log löschen
 				</button>
 			</div>
-			<div id="cts-block-log-content" class="cts-log-content">
+			
+			<div id="cts-block-log-content" style="
+				background: #1e1e1e; 
+				color: #d4d4d4; 
+				padding: 20px; 
+				border-radius: 4px; 
+				font-family: 'Courier New', monospace; 
+				font-size: 13px; 
+				line-height: 1.6;
+				max-height: 600px;
+				overflow-y: auto;
+			">
 				<?php if ( ! empty( $block_logs ) ) : ?>
 					<?php foreach ( $block_logs as $log ) : ?>
 						<?php
@@ -158,13 +175,13 @@ $block_logs = array_reverse( $block_logs );
 							$icon = '⚠️';
 						}
 						?>
-						<div class="cts-log-line cts-mb-8" style="color: <?php echo esc_attr( $color ); ?>;">
+						<div style="color: <?php echo esc_attr( $color ); ?>; margin-bottom: 8px;">
 							<span style="color: #6a9fb5;">[<?php echo esc_html( $timestamp ); ?>]</span>
 							<?php echo esc_html( $message ); ?>
 						</div>
 					<?php endforeach; ?>
 				<?php else : ?>
-					<div class="cts-muted cts-italic">
+					<div style="color: #6a9fb5; font-style: italic;">
 						Keine Logs vorhanden. Füge einen Block in einer Seite ein, um Logs zu sehen.
 					</div>
 				<?php endif; ?>
@@ -173,13 +190,13 @@ $block_logs = array_reverse( $block_logs );
 	</div>
 	
 	<!-- Instructions -->
-	<div class="cts-card cts-maxw-1200 cts-mt-20">
+	<div class="cts-card" style="max-width: 1200px; margin-top: 20px;">
 		<div class="cts-card-header">
 			<span class="cts-card-icon">ℹ️</span>
 			<h3>Anleitung</h3>
 		</div>
 		<div class="cts-card-body">
-			<ol class="cts-line-height-18">
+			<ol style="line-height: 1.8;">
 				<li>Öffne eine Seite oder Beitrag im <strong>Block-Editor</strong></li>
 				<li>Füge einen <strong>"ChurchTools Calendar NEU"</strong> Block ein</li>
 				<li>Speichere und <strong>lade die Seite im Frontend</strong></li>
@@ -187,8 +204,8 @@ $block_logs = array_reverse( $block_logs );
 				<li>Du siehst dann die Debug-Ausgaben mit 🔴 (Registration) und 🟢 (Rendering)</li>
 			</ol>
 			
-			<h4 class="cts-mt-20 cts-mb-10">Log-Symbole:</h4>
-			<ul class="cts-list-reset">
+			<h4 style="margin-top: 20px; margin-bottom: 10px;">Log-Symbole:</h4>
+			<ul style="list-style: none; padding: 0;">
 				<li>🔴 <strong>Rot</strong> - Block Registration (beim Laden)</li>
 				<li>🟢 <strong>Grün</strong> - Block Rendering (beim Anzeigen)</li>
 				<li>🟡 <strong>Gelb</strong> - Warnungen</li>
@@ -197,5 +214,6 @@ $block_logs = array_reverse( $block_logs );
 		</div>
 	</div>
 	
-<!-- Inline JS migrated to assets/js/churchtools-suite-admin.js -> initBlockDebug() -->
+</div>
 
+<!-- Inline JS migrated to assets/js/churchtools-suite-admin.js -> initBlockDebug() -->

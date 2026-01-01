@@ -24,18 +24,18 @@ $last_sync = get_option('churchtools_suite_calendars_last_sync', null);
 <div class="cts-tab-content-inner">
 
    <!-- Kalender Sync Button -->
-   <div class="cts-card cts-card-muted-accent cts-mt-20 cts-mb-0">
-	   <div class="cts-card-header">
-		   <h2 class="cts-mt-0">📅 <?php esc_html_e('Kalender', 'churchtools-suite'); ?></h2>
-		   <button id="cts-sync-calendars-btn" class="button button-secondary cts-btn-sync">
+   <div class="cts-card" style="margin-top: 20px; margin-bottom: 0; background: #f8f9fa; border: 1px solid #e0e0e0;">
+	   <div class="cts-card-header" style="display: flex; align-items: center; justify-content: space-between;">
+		   <h2 style="margin:0;">📅 <?php esc_html_e('Kalender', 'churchtools-suite'); ?></h2>
+		   <button id="cts-sync-calendars-btn" class="button button-secondary" style="font-size:15px; padding:8px 18px;">
 			   <span class="dashicons dashicons-update"></span> <?php esc_html_e('Kalender synchronisieren', 'churchtools-suite'); ?>
 		   </button>
 	   </div>
-	   <div id="cts-sync-calendars-result" class="cts-mt-8 cts-accent"></div>
+	   <div id="cts-sync-calendars-result" style="margin-top:8px; font-size:13px; color:#2271b1;"></div>
    </div>
 
    <!-- Calendar Selection Card -->
-   <div class="cts-card cts-mt-20">
+   <div class="cts-card" style="margin-top: 20px;">
 	   <div class="cts-card-header">
 		   <h2>✅ <?php esc_html_e('Kalenderauswahl', 'churchtools-suite'); ?></h2>
 	   </div>
@@ -65,10 +65,10 @@ $last_sync = get_option('churchtools_suite_calendars_last_sync', null);
 				<form method="post" id="cts-calendar-selection-form">
 					<?php wp_nonce_field('cts_calendar_selection', 'cts_calendar_selection_nonce'); ?>
 					
-					<table class="widefat cts-mt-15">
+					<table class="widefat" style="margin-top: 15px;">
 						<thead>
 							<tr>
-								<th class="cts-w-40">
+								<th style="width: 40px;">
 									<input type="checkbox" id="cts-select-all-calendars">
 								</th>
 								<th><?php esc_html_e('Kalender', 'churchtools-suite'); ?></th>
@@ -111,7 +111,7 @@ $last_sync = get_option('churchtools_suite_calendars_last_sync', null);
 									</td>
 									<td>
 										<?php if (!empty($calendar->color)): ?>
-											<div class="cts-color-swatch" style="background-color: <?php echo esc_attr($calendar->color); ?>;"></div>
+											<div style="display: inline-block; width: 30px; height: 20px; background-color: <?php echo esc_attr($calendar->color); ?>; border: 1px solid #ddd; border-radius: 3px;"></div>
 										<?php else: ?>
 											—
 										<?php endif; ?>
@@ -121,7 +121,7 @@ $last_sync = get_option('churchtools_suite_calendars_last_sync', null);
 						</tbody>
 					</table>
 					
-					<div class="cts-mt-15">
+					<div style="margin-top: 15px;">
 						<button type="submit" class="button button-primary">
 							<span class="dashicons dashicons-yes"></span>
 							<?php esc_html_e('Auswahl speichern', 'churchtools-suite'); ?>
@@ -129,12 +129,35 @@ $last_sync = get_option('churchtools_suite_calendars_last_sync', null);
 					</div>
 				</form>
 				
-				<div id="cts-calendar-selection-result" class="cts-mt-15"></div>
+				<div id="cts-calendar-selection-result" style="margin-top: 15px;"></div>
 				
 			<?php endif; ?>
 			
 		</div>
 	</div>
 	
-
 </div>
+
+<style>
+.cts-badge {
+	display: inline-block;
+	padding: 3px 8px;
+	font-size: 12px;
+	font-weight: 600;
+	border-radius: 3px;
+}
+.cts-badge-success {
+	background: #d4edda;
+	color: #155724;
+}
+.cts-badge-secondary {
+	background: #e2e3e5;
+	color: #383d41;
+}
+.cts-info {
+	background: #f0f0f1;
+	padding: 10px;
+	border-left: 4px solid #72aee6;
+	margin-bottom: 15px;
+}
+</style>

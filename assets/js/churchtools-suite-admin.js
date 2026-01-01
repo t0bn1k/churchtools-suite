@@ -157,7 +157,7 @@
 		// Save / Update preset buttons
 		const saveButton = document.getElementById('cts-save-preset');
 		if (saveButton) {
-			saveButton.addEventListener('click', function() {
+			saveButton.addEventListener('click', function(){
 				const presetId = document.getElementById('preset-id').value;
 				const name = document.getElementById('preset-name').value;
 				const description = document.getElementById('preset-description').value;
@@ -172,9 +172,9 @@
 				fetch(churchtoolsSuite.ajaxUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(params) })
 				.then(r => r.json()).then(data => {
 					const resultSpan = document.getElementById('cts-save-result');
-					if (data.success) { resultSpan.innerHTML = '<span class="cts-success">✓ Preset gespeichert!</span>'; setTimeout(()=> location.reload(), 1200); }
-					else { resultSpan.innerHTML = '<span class="cts-error">✗ Fehler: ' + (data.data ? data.data.message : 'Unbekannt') + '</span>'; }
-				}).catch(err => { const resultSpan = document.getElementById('cts-save-result'); resultSpan.innerHTML = '<span class="cts-error">✗ Fehler: ' + err.message + '</span>'; });
+					if (data.success) { resultSpan.innerHTML = '<span style="color: #00a32a;">✓ Preset gespeichert!</span>'; setTimeout(()=> location.reload(), 1200); }
+					else { resultSpan.innerHTML = '<span style="color: #d63638;">✗ Fehler: ' + (data.data ? data.data.message : 'Unbekannt') + '</span>'; }
+				}).catch(err => { const resultSpan = document.getElementById('cts-save-result'); resultSpan.innerHTML = '<span style="color: #d63638;">✗ Fehler: ' + err.message + '</span>'; });
 			});
 		}
 
@@ -220,8 +220,8 @@
 				if (!confirm('Einen manuellen Sync jetzt starten? Dies kann einige Zeit dauern.')) return;
 				syncBtn.disabled = true; const original = syncBtn.innerHTML; syncBtn.innerHTML = '⏳ Synchronisiere...';
 				fetch(churchtoolsSuite.ajaxUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'cts_trigger_manual_sync', nonce: churchtoolsSuite.nonce }) })
-				.then(r=>r.json()).then(data=>{ const result = document.getElementById('cts-sync-result'); if (data.success) { if (result) result.innerHTML = '<span class="cts-success">' + (data.data.message||'✅ Synchronisation abgeschlossen') + '</span>'; } else { if (result) result.innerHTML = '<span class="cts-error">' + (data.data?.message||data.message||'Fehler beim Sync') + '</span>'; } })
-				.catch(err=>{ const result = document.getElementById('cts-sync-result'); if (result) result.innerHTML = '<span class="cts-error">Fehler: ' + err.message + '</span>'; })
+				.then(r=>r.json()).then(data=>{ const result = document.getElementById('cts-sync-result'); if (data.success) { if (result) result.innerHTML = '<span style="color:#0a0">' + (data.data.message||'✅ Synchronisation abgeschlossen') + '</span>'; } else { if (result) result.innerHTML = '<span style="color:#d63638">' + (data.data?.message||data.message||'Fehler beim Sync') + '</span>'; } })
+				.catch(err=>{ const result = document.getElementById('cts-sync-result'); if (result) result.innerHTML = '<span style="color:#d63638">Fehler: ' + err.message + '</span>'; })
 				.finally(()=>{ syncBtn.disabled = false; syncBtn.innerHTML = original; });
 			});
 		}
@@ -232,15 +232,7 @@
 				if (!confirm('Update jetzt installieren? Dies überschreibt Plugin-Dateien.')) return;
 				installBtn.disabled = true; const orig = installBtn.innerHTML; installBtn.innerHTML = '⏳ Installiere...';
 				fetch(churchtoolsSuite.ajaxUrl, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ action: 'cts_run_update', nonce: churchtoolsSuite.nonce }) })
-				.then(r=>r.json()).then(function(data){
-					if (data.success) {
-						alert(data.data && data.data.message ? data.data.message : 'Update gestartet');
-						// Refresh page to reflect new plugin state
-						setTimeout(function(){ location.reload(); }, 700);
-					} else {
-						alert(data.data && data.data.message ? data.data.message : (data.message || 'Fehler beim Update'));
-					}
-				})
+				.then(r=>r.json()).then(function(data){ if (data.success) alert(data.data && data.data.message ? data.data.message : 'Update gestartet'); else alert(data.data && data.data.message ? data.data.message : (data.message || 'Fehler beim Update')); })
 				.catch(err=> alert('Netzwerkfehler: ' + err.message))
 				.finally(()=>{ installBtn.disabled = false; installBtn.innerHTML = orig; });
 			});
@@ -1167,7 +1159,9 @@
 
 		// Regular incremental sync
 		if (syncButton) {
-			syncButton.addEventListener('click', function() { performEventSync(false); });
+			syncButton.addEventListener('click', function() {
+				performEventSync(false);
+			});
 		}
 
 		// Force full sync (v0.7.1.0)
@@ -1238,8 +1232,7 @@
 						if (data.data.sync_type) {
 							const syncTypeLabel = data.data.sync_type === 'incremental' ? 'INKREMENTELL' : 'VOLL';
 							const syncTypeColor = data.data.sync_type === 'incremental' ? '#00a32a' : '#2271b1';
-							// Use badge class; set inline CSS variable for background color (minimal inline usage)
-							message = '<span class="cts-badge" style="--cts-badge-bg:' + syncTypeColor + '; background:' + syncTypeColor + ';">' + syncTypeLabel + '</span>' + message;
+							message = '<span style="display: inline-block; padding: 2px 8px; font-size: 11px; font-weight: 600; color: white; background: ' + syncTypeColor + '; border-radius: 3px; margin-right: 6px;">' + syncTypeLabel + '</span>' + message;
 						}
 						
 						resultDiv.innerHTML = '<div class="notice notice-success inline"><p>' + message + '</p></div>';

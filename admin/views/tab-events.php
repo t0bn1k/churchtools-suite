@@ -101,7 +101,7 @@ $total_pages = ceil( $total / $limit );
 					<input type="date" name="to" value="<?php echo esc_attr( $to ); ?>" class="cts-form-input" />
 				</div>
 				
-				<div class="cts-form-group cts-col-span-2">
+				<div class="cts-form-group" style="grid-column: span 2;">
 					<label>🗂️ <?php esc_html_e( 'Kalender', 'churchtools-suite' ); ?></label>
 					<select name="calendar_id" class="cts-form-input">
 						<option value=""><?php esc_html_e( 'Alle Kalender', 'churchtools-suite' ); ?></option>
@@ -332,7 +332,7 @@ $total_pages = ceil( $total / $limit );
 										<button type="button" class="cts-btn cts-btn-small cts-details-toggle" data-target="event-details-<?php echo esc_attr( $event->id ); ?>">
 											📝 <?php esc_html_e( 'Infos', 'churchtools-suite' ); ?>
 										</button>
-										<div id="event-details-<?php echo esc_attr( $event->id ); ?>" class="cts-event-details-panel cts-hidden">
+										<div id="event-details-<?php echo esc_attr( $event->id ); ?>" class="cts-event-details-panel cts-hidden" style="display:none;">
 											<?php if ( ! empty( $event->event_description ) ) : ?>
 												<div class="cts-description-section">
 													<strong>🎯 <?php esc_html_e( 'Serie / Event:', 'churchtools-suite' ); ?></strong>
