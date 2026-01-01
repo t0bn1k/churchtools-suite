@@ -22,6 +22,9 @@ class ChurchTools_Suite_Admin {
 	 */
 	public function __construct( string $version ) {
 		$this->version = $version;
+		
+		// v0.9.4.9: Add "Update prüfen" link to plugin actions
+		add_filter( 'plugin_action_links_' . CHURCHTOOLS_SUITE_BASENAME, [ $this, 'add_plugin_action_links' ] );
 	}
 
 	/**
@@ -93,6 +96,13 @@ class ChurchTools_Suite_Admin {
 				   ]);
 			   }
 
+			   // v0.9.4.9: Clear WordPress update transients to force refresh
+			   delete_site_transient( 'update_plugins' );
+			   delete_transient( 'churchtools_suite_github_release' );
+			   
+			   // Force WordPress to check for plugin updates immediately
+			   wp_update_plugins();
+
 			   // Only check availability — do NOT perform the update from the admin button
 			   $info = ChurchTools_Suite_Auto_Updater::get_latest_release_info();
 			   if ( is_wp_error( $info ) ) {
@@ -112,13 +122,45 @@ class ChurchTools_Suite_Admin {
 				   ]);
 			   }
 
-			   wp_send_json_success( [ 'message' => __( 'Update-Prüfung abgeschlossen.', 'churchtools-suite' ), 'data' => $info ] );
+			   wp_send_json_success( [ 'message' => __( 'Update-Prüfung abgeschlossen. Bitte Plugin-Seite neu laden.', 'churchtools-suite' ), 'data' => $info ] );
 		   } catch ( Exception $e ) {
 			   if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
 				   ChurchTools_Suite_Logger::error('updater', 'Exception bei manueller Update-Prüfung', [ 'exception' => $e->getMessage() ]);
 			   }
 			   wp_send_json_error( [ 'message' => __( 'Fehler: ', 'churchtools-suite' ) . $e->getMessage() ] );
 		   }
+	}
+	
+	/**
+	 * AJAX Handler: Force Update Check (v0.9.4.9)
+	 * 
+	 * Clears WordPress update transient cache and forces immediate check.
+	 * Used by "Update prüfen" link on plugins page.
+	 */
+	public function ajax_force_update_check() {
+		check_ajax_referer( 'churchtools_suite_admin', 'nonce' );
+		
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'Keine Berechtigung.', 'churchtools-suite' ) ] );
+			return;
+		}
+		
+		// Clear all update caches
+		delete_site_transient( 'update_plugins' );
+		delete_transient( 'churchtools_suite_github_release' );
+		
+		// Force WordPress to re-check plugins
+		wp_update_plugins();
+		
+		// Log action
+		if ( class_exists( 'ChurchTools_Suite_Logger' ) ) {
+			ChurchTools_Suite_Logger::info( 'updater', 'Force update check triggered from plugins page', [
+				'user' => get_current_user_id(),
+				'current_version' => CHURCHTOOLS_SUITE_VERSION
+			] );
+		}
+		
+		wp_send_json_success( [ 'message' => __( 'Update-Cache geleert. Seite wird neu geladen...', 'churchtools-suite' ) ] );
 	}
 	
 	/**
@@ -239,6 +281,91 @@ class ChurchTools_Suite_Admin {
 	}
 	
 	/**
+	 * Add custom action links to plugin page (v0.9.4.9)
+	 * 
+	 * Adds "Update prüfen" link that clears WordPress update cache
+	 * 
+	 * @param array $links Existing plugin action links
+	 * @return array Modified links
+	 */
+	public function add_plugin_action_links( array $links ): array {
+		$check_update_link = sprintf(
+			'<a href="#" id="cts-force-update-check" style="color: #2271b1; font-weight: 600;">%s</a>',
+			__( 'Update prüfen', 'churchtools-suite' )
+		);
+		
+		array_unshift( $links, $check_update_link );
+		
+		// Add inline script to handle click (only on plugins.php page)
+		global $pagenow;
+		if ( $pagenow === 'plugins.php' ) {
+			add_action( 'admin_footer', [ $this, 'add_force_update_check_script' ] );
+		}
+		
+		return $links;
+	}
+	
+	/**
+	 * Add inline JavaScript for "Update prüfen" button (v0.9.4.9)
+	 */
+	public function add_force_update_check_script() {
+		?>
+		<script type="text/javascript">
+		(function() {
+			var button = document.getElementById('cts-force-update-check');
+			if (!button) return;
+			
+			button.addEventListener('click', function(e) {
+				e.preventDefault();
+				
+				var originalText = this.innerHTML;
+				this.innerHTML = '⏳ Prüfe...';
+				this.style.pointerEvents = 'none';
+				
+				// Call AJAX to clear transients and force update check
+				fetch(ajaxurl, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: new URLSearchParams({
+						action: 'cts_force_update_check',
+						nonce: '<?php echo wp_create_nonce( 'churchtools_suite_admin' ); ?>'
+					})
+				})
+				.then(function(r) { return r.json(); })
+				.then(function(data) {
+					if (data.success) {
+						button.innerHTML = '✓ Aktualisiert';
+						button.style.color = '#00a32a';
+						// Reload page after 1 second to show update notice
+						setTimeout(function() { location.reload(); }, 1000);
+					} else {
+						button.innerHTML = '✗ Fehler';
+						button.style.color = '#d63638';
+						alert(data.data ? data.data.message : 'Fehler beim Update-Check');
+						setTimeout(function() { 
+							button.innerHTML = originalText;
+							button.style.color = '#2271b1';
+							button.style.pointerEvents = '';
+						}, 3000);
+					}
+				})
+				.catch(function(err) {
+					button.innerHTML = '✗ Fehler';
+					button.style.color = '#d63638';
+					alert('Netzwerkfehler: ' + err.message);
+					setTimeout(function() { 
+						button.innerHTML = originalText;
+						button.style.color = '#2271b1';
+						button.style.pointerEvents = '';
+					}, 3000);
+				});
+			});
+		})();
+		</script>
+		<?php
+	}
+	
+	/**
 	 * Display shortcode demo page
 	 */
 	public function display_shortcode_demo() {
@@ -284,6 +411,7 @@ class ChurchTools_Suite_Admin {
 		add_action( 'wp_ajax_cts_trigger_manual_sync', [ $this, 'ajax_trigger_manual_sync' ] );
 		add_action( 'wp_ajax_cts_manual_update', [ $this, 'ajax_manual_update' ] );
 		add_action( 'wp_ajax_cts_run_update', [ $this, 'ajax_run_update' ] );
+		add_action( 'wp_ajax_cts_force_update_check', [ $this, 'ajax_force_update_check' ] ); // v0.9.4.9
 		add_action( 'wp_ajax_cts_trigger_keepalive', [ $this, 'ajax_trigger_keepalive' ] );
 		// Simple ping endpoint to verify AJAX/JSON pipeline
 		add_action( 'wp_ajax_cts_keepalive_ping', [ $this, 'ajax_keepalive_ping' ] );
